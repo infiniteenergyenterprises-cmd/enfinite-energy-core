@@ -1,0 +1,299 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// USER & ROLE MANAGEMENT
+// -----------------------------------------------------------------------------
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  blogs     Blog[]
+  news      News[]
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g., ADMIN, EDITOR, RECRUITER
+  permissions String[] // e.g., ["MANAGE_USERS", "MANAGE_BLOGS"]
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// PORTFOLIO & PROJECTS
+// -----------------------------------------------------------------------------
+
+model Project {
+  id             String         @id @default(uuid())
+  title          String
+  slug           String         @unique
+  description    String
+  location       String?
+  capacity       String? // e.g., "500 kW"
+  savings        String? // e.g., "$10,000/year"
+  completionDate DateTime?
+  categoryId     String
+  category       Category       @relation(fields: [categoryId], references: [id])
+  images         ProjectImage[]
+  isFeatured     Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model ProjectImage {
+  id        String   @id @default(uuid())
+  url       String
+  alt       String?
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique // e.g., RESIDENTIAL, COMMERCIAL, INDUSTRIAL
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// SERVICES
+// -----------------------------------------------------------------------------
+
+model Service {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String
+  icon        String?
+  features    String[]
+  pricingInfo String?
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// LEAD GENERATION
+// -----------------------------------------------------------------------------
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  type      String // e.g., SURVEY, QUOTE, CONTACT
+  message   String?
+  status    String   @default("NEW") // NEW, CONTACTED, CONVERTED, CLOSED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// CAREERS & APPLICANTS
+// -----------------------------------------------------------------------------
+
+model Career {
+  id           String      @id @default(uuid())
+  title        String
+  department   String
+  location     String
+  type         String // FULL_TIME, PART_TIME, INTERNSHIP
+  description  String
+  requirements String[]
+  benefits     String[]
+  isActive     Boolean     @default(true)
+  applicants   Applicant[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Applicant {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String
+  resumeUrl   String
+  coverLetter String?
+  careerId    String
+  career      Career   @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  status      String   @default("PENDING") // PENDING, REVIEWED, INTERVIEW, HIRED, REJECTED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// CONTENT (BLOGS, NEWS, EVENTS)
+// -----------------------------------------------------------------------------
+
+model Blog {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  content     String // Rich text or Markdown
+  imageUrl    String?
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id])
+  categoryId  String
+  category    BlogCategory @relation(fields: [categoryId], references: [id])
+  isPublished Boolean      @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model BlogCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  blogs     Blog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String
+  sourceUrl   String?
+  imageUrl    String?
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String
+  location    String?
+  date        DateTime
+  imageUrl    String?
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// MEDIA & ASSETS
+// -----------------------------------------------------------------------------
+
+model Gallery {
+  id        String   @id @default(uuid())
+  title     String?
+  type      String // IMAGE, VIDEO
+  url       String
+  category  String? // e.g., OFFICE, EVENTS, PROJECTS
+  createdAt DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  filename  String
+  url       String
+  format    String?
+  size      Int?
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// COMPANY INFO (TESTIMONIALS, FAQS, PARTNERS, CLIENTS)
+// -----------------------------------------------------------------------------
+
+model Testimonial {
+  id          String   @id @default(uuid())
+  name        String
+  designation String?
+  company     String?
+  content     String
+  rating      Int      @default(5)
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model FAQ {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  category  String? // e.g., GENERAL, PRICING, INSTALLATION
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Partner {
+  id        String   @id @default(uuid())
+  name      String
+  logoUrl   String
+  website   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  logoUrl   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// SETTINGS & SEO
+// -----------------------------------------------------------------------------
+
+model Settings {
+  id          String   @id @default(uuid())
+  key         String   @unique // e.g., COMPANY_NAME, CONTACT_EMAIL
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SEO {
+  id          String   @id @default(uuid())
+  page        String   @unique // e.g., HOME, ABOUT, CONTACT
+  title       String
+  description String
+  keywords    String?
+  ogImage     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Contact {
+  id           String   @id @default(uuid())
+  address      String
+  phone1       String
+  phone2       String?
+  email1       String
+  email2       String?
+  whatsapp     String?
+  workingHours String?
+  mapEmbedUrl  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
