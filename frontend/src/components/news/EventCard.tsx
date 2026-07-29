@@ -8,9 +8,11 @@ interface EventCardProps {
   title: string;
   location: string;
   desc: string;
+  image?: string;
+  time?: string;
 }
 
-export function EventCard({ day, month, year, title, location, desc }: EventCardProps) {
+export function EventCard({ day, month, year, title, location, desc, image, time = "10:00 AM - 4:00 PM" }: EventCardProps) {
   const [registered, setRegistered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState('');
@@ -52,45 +54,59 @@ export function EventCard({ day, month, year, title, location, desc }: EventCard
 
   return (
     <>
-      <div className="relative flex bg-gradient-to-br from-[#0B1120] via-[#0f1d35] to-[#0B1120] rounded-2xl overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 group shadow-xl hover:shadow-primary/20 hover:shadow-2xl">
+      <div className="relative flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-primary/50 transition-all duration-300 group shadow-lg hover:shadow-xl hover:shadow-primary/10 h-full">
         
-        {/* Glowing background blob */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-500 -translate-y-1/2 translate-x-1/2" />
-
-        {/* Date Column — Glassmorphism box */}
-        <div className="relative w-20 shrink-0 flex flex-col items-center justify-center p-3 border-r border-white/10">
-          <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
-          <div className="relative z-10 flex flex-col items-center">
-            <span className="text-3xl font-black text-primary leading-none">{day}</span>
-            <span className="text-[11px] font-black text-white/80 uppercase tracking-widest mt-0.5">{month}</span>
-            <span className="text-[9px] font-bold text-white/40 mt-1 bg-white/10 px-1.5 py-0.5 rounded-full">{year}</span>
+        {/* Top Image Section */}
+        <div className="relative h-48 overflow-hidden bg-slate-900">
+          <img 
+            src={image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80"} 
+            alt={title}
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-80"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          
+          {/* Floating Date Badge */}
+          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 flex flex-col items-center justify-center shadow-lg border border-white/20">
+            <span className="text-2xl font-black text-primary leading-none">{day}</span>
+            <span className="text-xs font-black text-slate-800 uppercase tracking-widest mt-0.5">{month}</span>
           </div>
         </div>
         
         {/* Content Column */}
-        <div className="p-4 flex-grow flex flex-col justify-center relative z-10">
-          <h3 className="font-black text-white text-[15px] mb-1 group-hover:text-primary transition-colors leading-tight">
+        <div className="p-5 flex-grow flex flex-col relative z-10">
+          <div className="flex flex-wrap gap-3 mb-3">
+            <span className="bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md">
+              {year}
+            </span>
+            <span className="bg-gray-100 text-gray-600 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md flex items-center gap-1">
+               🕒 {time}
+            </span>
+          </div>
+
+          <h3 className="font-black text-gray-900 text-xl mb-2 group-hover:text-primary transition-colors leading-tight">
             {title}
           </h3>
-          <p className="text-[11px] font-bold text-primary/80 flex items-center gap-1.5 mb-2 uppercase tracking-wide">
-            <MapPin className="w-3.5 h-3.5 text-primary" /> {location}
+          
+          <p className="text-xs font-bold text-gray-500 flex items-center gap-1.5 mb-3 uppercase tracking-wide">
+            <MapPin className="w-4 h-4 text-primary" /> {location}
           </p>
-          <p className="text-xs text-white/50 mb-3 line-clamp-2">
+          
+          <p className="text-sm text-gray-600 mb-6 flex-grow leading-relaxed">
             {desc}
           </p>
           
-          <div className="mt-auto">
+          <div className="mt-auto pt-4 border-t border-gray-100">
             {registered ? (
-              <button disabled className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold py-1.5 px-4 text-xs rounded-full flex items-center gap-1.5 w-max backdrop-blur-sm">
-                <CheckCircle className="w-3.5 h-3.5" /> Registered!
+              <button disabled className="w-full bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold py-3 px-4 text-sm rounded-xl flex justify-center items-center gap-2">
+                <CheckCircle className="w-4 h-4" /> Registered Successfully!
               </button>
             ) : (
               <button 
                 onClick={() => setShowModal(true)}
-                className="bg-primary/10 border border-primary/30 hover:bg-primary hover:border-primary text-primary hover:text-[#0B1120] font-bold py-1.5 px-4 text-xs rounded-full transition-all duration-300 w-max flex items-center gap-1 group/btn backdrop-blur-sm"
+                className="w-full bg-primary/10 border border-primary/30 hover:bg-primary hover:border-primary text-primary hover:text-[#0A192F] font-bold py-3 px-4 text-sm rounded-xl transition-all duration-300 flex justify-center items-center gap-2 group/btn"
               >
-                Register Now
-                <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform" />
+                Register for Event
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             )}
           </div>

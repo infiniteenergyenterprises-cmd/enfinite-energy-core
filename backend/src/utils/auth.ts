@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-solarsmile';
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-infiniteenergy';
 const JWT_EXPIRES_IN = '1d';
 
 export interface JwtPayload {

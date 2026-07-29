@@ -1,159 +1,177 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, MapPin, Bell, Check, ArrowRight, ShieldCheck } from 'lucide-react';
+import { X, Check, ArrowRight, ShieldCheck, User, Phone, ChevronDown, Sun } from 'lucide-react';
 
-export function SubscriptionPopup() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [contact, setContact] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [locationStatus, setLocationStatus] = useState<'idle' | 'requesting' | 'allowed' | 'denied'>('idle');
-  const [detectedState, setDetectedState] = useState('');
+interface SubscriptionPopupProps {
+  show: boolean;
+  onClose: () => void;
+}
+
+const VISIT_REASONS = [
+  'Solar Subsidy / Govt. Scheme',
+  'Residential Rooftop Solar',
+  'Commercial / Industrial Solar',
+  'Agriculture Solar Pump',
+];
+
+export function SubscriptionPopup({ show, onClose }: SubscriptionPopupProps) {
+  const [visible, setVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [reason, setReason] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    // Show popup after 2.5 seconds on first-time visits
-    const visited = localStorage.getItem('solar_smile_visited');
-    if (!visited) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        localStorage.setItem('solar_smile_visited', 'true');
-      }, 2500);
-      return () => clearTimeout(timer);
+    if (show) {
+      const t = setTimeout(() => setVisible(true), 50);
+      // Lock background scroll
+      const scrollY = window.scrollY;
+      document.documentElement.style.setProperty('--scroll-y', `-${scrollY}px`);
+      document.body.classList.add('scroll-locked');
+      return () => {
+        clearTimeout(t);
+        document.body.classList.remove('scroll-locked');
+        document.documentElement.style.removeProperty('--scroll-y');
+        window.scrollTo(0, scrollY);
+      };
+    } else {
+      setVisible(false);
+      document.body.classList.remove('scroll-locked');
     }
-  }, []);
+  }, [show]);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  if (!show) return null;
+
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(onClose, 300);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!contact) return;
-    setIsSubscribed(true);
-    // Auto-close after 2 seconds
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 2000);
+    if (!name || !mobile) return;
+    setSubmitted(true);
+    setTimeout(() => handleClose(), 2500);
   };
-
-  const requestLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationStatus('denied');
-      return;
-    }
-
-    setLocationStatus('requesting');
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        setLocationStatus('allowed');
-        // Reverse geocode using a free API (bigdatacloud / openstreetmap)
-        try {
-          const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`);
-          const data = await res.json();
-          const stateName = data.principalSubdivision || 'Bihar / UP';
-          setDetectedState(stateName);
-          localStorage.setItem('solar_detected_state', stateName);
-          localStorage.setItem('solar_latitude', String(position.coords.latitude));
-          localStorage.setItem('solar_longitude', String(position.coords.longitude));
-        } catch (err) {
-          setDetectedState('Bihar / UP');
-        }
-      },
-      () => {
-        setLocationStatus('denied');
-      }
-    );
-  };
-
-  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1E3D]/80 backdrop-blur-md transition-opacity duration-300">
-      <div className="bg-white border border-gray-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 max-w-lg w-full shadow-2xl relative overflow-hidden transition-all transform scale-100 mx-2 sm:mx-0">
-        
-        {/* Accent Top Bar */}
-        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#F5A623] via-yellow-400 to-[#F5A623]" />
-        
-        {/* Close Button */}
-        <button 
-          onClick={() => setIsOpen(false)}
-          className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 hover:bg-gray-50 rounded-full text-gray-400 hover:text-gray-900 transition-colors"
+    <div
+      className={`fixed inset-0 z-[55] flex items-center justify-center p-4 transition-all duration-300 ${
+        visible ? 'bg-black/60 backdrop-blur-md' : 'bg-transparent backdrop-blur-none pointer-events-none'
+      }`}
+      onClick={handleClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={`relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ${
+          visible ? 'scale-100 opacity-100 translate-y-0' : 'scale-90 opacity-0 translate-y-8'
+        }`}
+      >
+        {/* Top gradient bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300" />
+
+        {/* ── Close Button — inside card, top-right corner ── */}
+        <button
+          onClick={handleClose}
+          className="absolute top-3 right-3 z-50 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center shadow hover:bg-red-50 hover:text-red-500 transition-colors"
+          aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 text-gray-600" />
         </button>
 
-        {/* Header Icon */}
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-[#F5A623] mb-3 sm:mb-4">
-          <Bell className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce" />
-        </div>
+        <div className="p-7">
+          {submitted ? (
+            /* ── Success State ── */
+            <div className="text-center py-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-400/30">
+                <Check className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-black text-gray-900 mb-1">Thank You, {name}! 🙏</h3>
+              <p className="text-sm text-gray-500 mb-2">Our solar expert will call you within</p>
+              <p className="text-2xl font-black text-amber-500">30 Minutes</p>
+              <p className="text-xs text-gray-400 mt-3">+91 74800 18007</p>
+            </div>
+          ) : (
+            <>
+              {/* ── Header ── */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0 shadow-md" style={{width:'52px',height:'52px'}}>
+                  <Sun className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Free Callback</p>
+                  <h3 className="text-lg font-extrabold text-gray-900 leading-tight">Get Solar Consultation</h3>
+                </div>
+              </div>
 
-        {/* Content */}
-        <div className="mb-4 sm:mb-6">
-          <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#F5A623]">Limited Time Subsidy Update</span>
-          <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#0B1E3D] leading-tight mt-1">
-            Get Up To 40% Govt. Subsidy On Solar!
-          </h3>
-          <p className="text-[11px] sm:text-xs text-gray-500 mt-2 leading-relaxed">
-            Subscribe to our weekly solar discount alerts, and allow location to instantly see subsidies active in your district (e.g., Bihar, UP, or Delhi NCR).
-          </p>
-        </div>
+              <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+                Fill your details — our expert will call you <strong className="text-gray-700">within 30 minutes</strong> with a free quote.
+              </p>
 
-        {/* Location Request Panel */}
-        <div className="bg-gray-50 border border-gray-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-5 flex items-start gap-3">
-          <div className="p-2 sm:p-2.5 bg-white border border-gray-100 rounded-lg sm:rounded-xl shrink-0">
-            <MapPin className={`w-4.5 h-4.5 sm:w-5 sm:h-5 ${locationStatus === 'allowed' ? 'text-emerald-500' : 'text-red-500'}`} />
-          </div>
-          <div className="min-w-0 flex-grow">
-            <h4 className="text-[10px] sm:text-xs font-black text-gray-900 uppercase tracking-wider">Subsidy Location Tracker</h4>
-            <p className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5 leading-snug">
-              {locationStatus === 'idle' && 'Allow location access to check local state incentives.'}
-              {locationStatus === 'requesting' && 'Accessing secure GPS satellites...'}
-              {locationStatus === 'allowed' && `Location Verified! Subsidies customized for: ${detectedState || 'Bihar / UP'}`}
-              {locationStatus === 'denied' && 'Access denied. You can select your state manually.'}
-            </p>
-            {locationStatus !== 'allowed' && locationStatus !== 'denied' && (
-              <button 
-                onClick={requestLocation}
-                disabled={locationStatus === 'requesting'}
-                className="mt-2 bg-[#0B1E3D] hover:bg-[#1a3260] text-white text-[9px] sm:text-[10px] font-black px-3.5 py-1.5 rounded-lg transition-all uppercase tracking-wider disabled:opacity-50"
-              >
-                {locationStatus === 'requesting' ? 'Requesting...' : 'Detect Location'}
-              </button>
-            )}
-          </div>
-        </div>
+              {/* ── Form ── */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Name */}
+                <div className="relative">
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    required
+                    type="text"
+                    placeholder="Your full name *"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20 rounded-xl text-sm text-gray-900 bg-gray-50 focus:bg-white transition-all"
+                  />
+                </div>
 
-        {/* Subscription Form */}
-        {isSubscribed ? (
-          <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 text-center flex items-center justify-center gap-2">
-            <Check className="w-5 h-5" />
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider">Subscription Successful!</span>
-          </div>
-        ) : (
-          <form onSubmit={handleSubscribe} className="space-y-3">
-            <div>
-              <label className="block text-[8px] sm:text-[9px] uppercase font-black text-gray-500 mb-1">Enter Mobile or Email Address</label>
-              <div className="relative">
-                <input 
-                  required
-                  type="text" 
-                  placeholder="Mobile number or email" 
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                  className="w-full bg-white border border-gray-200 focus:border-[#F5A623] focus:outline-none rounded-xl pl-3.5 pr-12 py-2.5 sm:py-3 text-xs text-gray-900 font-semibold shadow-sm"
-                />
-                <button 
+                {/* Mobile */}
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">+91</span>
+                  <Phone className="absolute left-12 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    required
+                    type="tel"
+                    placeholder="Mobile number *"
+                    value={mobile}
+                    maxLength={10}
+                    pattern="[6-9][0-9]{9}"
+                    onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
+                    className="w-full pl-[4.5rem] pr-4 py-3 border border-gray-200 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20 rounded-xl text-sm text-gray-900 bg-gray-50 focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* Reason Dropdown */}
+                <div className="relative">
+                  <select
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    className="w-full pl-4 pr-9 py-3 border border-gray-200 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20 rounded-xl text-sm text-gray-600 bg-gray-50 focus:bg-white appearance-none transition-all"
+                  >
+                    <option value="">Why are you visiting? (Optional)</option>
+                    {VISIT_REASONS.map((r) => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+
+                {/* Submit */}
+                <button
                   type="submit"
-                  className="absolute right-1.5 top-1.5 bottom-1.5 bg-[#F5A623] hover:brightness-110 text-[#0B1E3D] px-3.5 rounded-lg flex items-center justify-center transition-all"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 active:scale-95 text-[#0A192F] font-black py-4 rounded-xl transition-all text-sm shadow-lg shadow-amber-400/25"
                 >
+                  Get Free Callback
                   <ArrowRight className="w-4 h-4" />
                 </button>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-1.5 text-[9px] text-gray-400 mt-2 justify-center">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              <span>We never share your information. Unsubscribe anytime.</span>
-            </div>
-          </form>
-        )}
+              </form>
 
+              <div className="flex items-center justify-center gap-1.5 mt-5">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <span className="text-[10px] text-gray-400">100% private · No spam · Unsubscribe anytime</span>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

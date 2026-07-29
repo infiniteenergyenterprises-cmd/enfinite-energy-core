@@ -1,1 +1,1 @@
-404: Not Found
+export default function IndiaStatesMap() { return null; }

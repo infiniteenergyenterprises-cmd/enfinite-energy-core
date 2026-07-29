@@ -1,6 +1,8 @@
+"use client";
 import React from 'react';
 import { ArrowRight, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { usePageContent } from '@/hooks/usePageContent';
 
 export interface ProjectType {
   image: string;
@@ -16,49 +18,54 @@ interface FeaturedProjectsProps {
 }
 
 export function FeaturedProjects({ projects: propProjects }: FeaturedProjectsProps) {
+  const cms100KW  = usePageContent('PROJ_100KW', { imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80", title: "100kW Rooftop System" });
+  const cms500KW  = usePageContent('PROJ_500KW', { imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", title: "500kW Industrial Plant" });
+  const cms10HP   = usePageContent('PROJ_10HP',  { imageUrl: "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800&q=80", title: "10HP Solar Water Pump" });
+  const cms5KW    = usePageContent('PROJ_5KW',   { imageUrl: "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=800&q=80", title: "5kW On-Grid System" });
+
   const defaultProjects: ProjectType[] = [
     {
-      image: "https://images.unsplash.com/photo-1611365892117-00ac5ef43c90?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      tag: "RESIDENTIAL",
-      title: "10kW Rooftop Project",
-      location: "Lucknow, Uttar Pradesh",
-      capacity: "10 kW",
-      savings: "₹1.2 Lakh"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1592833159155-c62df1b65634?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: cms100KW.imageUrl || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
       tag: "COMMERCIAL",
-      title: "50kW Commercial Project",
-      location: "Noida, Uttar Pradesh",
-      capacity: "50 kW",
-      savings: "₹6.5 Lakh"
+      title: cms100KW.title || "100kW Rooftop System",
+      location: "Indore, Madhya Pradesh",
+      capacity: "100 kW",
+      savings: "₹12,50,000"
     },
     {
-      image: "https://images.unsplash.com/photo-1521618755572-156ae0cdd74d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: cms500KW.imageUrl || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
       tag: "INDUSTRIAL",
-      title: "500kW Industrial Project",
+      title: cms500KW.title || "500kW Industrial Plant",
       location: "Pune, Maharashtra",
       capacity: "500 kW",
-      savings: "₹45 Lakh"
+      savings: "₹65,00,000"
     },
     {
-      image: "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      tag: "GOVT. PROJECT",
-      title: "1MW Govt. Project",
-      location: "Rajasthan",
-      capacity: "1 MW",
-      savings: "₹98 Lakh"
+      image: cms10HP.imageUrl || "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800&q=80",
+      tag: "AGRICULTURE",
+      title: cms10HP.title || "10HP Solar Water Pump",
+      location: "Nagaur, Rajasthan",
+      capacity: "10 HP",
+      savings: "1,20,000 Ltrs"
+    },
+    {
+      image: cms5KW.imageUrl || "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=800&q=80",
+      tag: "RESIDENTIAL",
+      title: cms5KW.title || "5kW On-Grid System",
+      location: "Lucknow, Uttar Pradesh",
+      capacity: "5 kW",
+      savings: "₹62,000"
     }
   ];
 
   const projects = propProjects || defaultProjects;
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50/50">
+    <section className="py-12 px-4 sm:px-4 lg:px-6 bg-gray-50/50">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[#0A192F] mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0A192F] mb-4">
               Featured Projects
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl">
@@ -71,13 +78,13 @@ export function FeaturedProjects({ projects: propProjects }: FeaturedProjectsPro
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {projects.map((project, index) => (
             <div 
               key={index} 
               className="group bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col border border-gray-100"
             >
-              <div className="h-[220px] relative overflow-hidden">
+              <div className="h-[200px] sm:h-[220px] relative overflow-hidden">
                 <img 
                   src={project.image} 
                   alt={project.title} 

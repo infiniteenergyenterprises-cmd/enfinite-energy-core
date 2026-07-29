@@ -1,12 +1,14 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Phone, ChevronDown, MessageCircle, Menu, X, Sun } from 'lucide-react';
+import { Phone, ChevronDown, Menu, X, BookOpen, HelpCircle, BarChart2, FileText, Calculator } from 'lucide-react';
 import { Button } from '../ui/Button';
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+  const resourcesRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname() || '';
 
   React.useEffect(() => {
@@ -15,10 +17,19 @@ export function Navbar() {
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isMobileMenuOpen]);
+
+  // Close resources dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (resourcesRef.current && !resourcesRef.current.contains(e.target as Node)) {
+        setIsResourcesOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const getLinkClass = (path: string) => {
     // Exact match for home, startsWith for subpages
@@ -32,7 +43,7 @@ export function Navbar() {
 
   return (
     <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
         {/* Logo */}
           <Link href="/" className="flex flex-shrink-0 items-center gap-2 group">
             <img src="/LOGO.png" alt="EnfiniteEnergy Logo" className="h-12 w-auto object-contain" />
@@ -45,6 +56,9 @@ export function Navbar() {
           <Link href="/solutions" className={getLinkClass('/solutions')}>Solutions</Link>
           <Link href="/our-work" className={getLinkClass('/our-work')}>Our Work</Link>
           <Link href="/news" className={getLinkClass('/news')}>News & Events</Link>
+
+
+
           <Link href="/careers" className={getLinkClass('/careers')}>Careers</Link>
           <Link href="/company" className={getLinkClass('/company')}>About</Link>
           <Link href="/contact" className={getLinkClass('/contact')}>Contact</Link>
@@ -52,7 +66,7 @@ export function Navbar() {
 
         {/* Header Right Side */}
         <div className="hidden lg:flex items-center gap-4">
-          <a href="tel:+919876543210" className="flex items-center gap-2 text-[#0B1E3D] hover:text-[#F5A623] bg-gray-50 border border-gray-200/60 hover:border-[#F5A623]/30 px-4.5 py-2.5 rounded-xl font-black text-xs transition-all shadow-sm">
+          <a href="tel:+917480018007" className="flex items-center gap-2 text-[#0B1E3D] hover:text-[#F5A623] bg-gray-50 border border-gray-200/60 hover:border-[#F5A623]/30 px-4.5 py-2.5 rounded-xl font-black text-xs transition-all shadow-sm">
             <Phone className="w-4 h-4 text-[#F5A623]" />
             <span>Call Now</span>
           </a>
@@ -74,10 +88,11 @@ export function Navbar() {
              <Link href="/solutions" onClick={() => setIsMobileMenuOpen(false)}>Solutions</Link>
              <Link href="/our-work" onClick={() => setIsMobileMenuOpen(false)}>Our Work</Link>
              <Link href="/news" onClick={() => setIsMobileMenuOpen(false)}>News & Events</Link>
+
              <Link href="/company" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
              <Link href="/careers" onClick={() => setIsMobileMenuOpen(false)}>Careers</Link>
              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-             <a href="tel:+919876543210" className="w-full flex items-center justify-center gap-2 bg-[#F5A623] text-white py-3 rounded-xl font-black text-xs transition-all uppercase tracking-wider mt-2 shadow-sm">
+             <a href="tel:+917480018007" className="w-full flex items-center justify-center gap-2 bg-[#F5A623] text-white py-3 rounded-xl font-black text-xs transition-all uppercase tracking-wider mt-2 shadow-sm">
                <Phone className="w-4 h-4" />
                Call Now
              </a>

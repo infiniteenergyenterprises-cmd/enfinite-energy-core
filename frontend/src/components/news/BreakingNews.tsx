@@ -16,7 +16,7 @@ export function BreakingNews() {
 
   return (
     <div className="bg-white border-b border-gray-100 overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-12 text-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-6 flex items-center h-12 text-sm">
         <div className="flex items-center gap-2 font-bold text-red-600 shrink-0 pr-6 border-r border-gray-200 z-10 bg-white shadow-[10px_0_10px_-10px_rgba(0,0,0,0.1)]">
           <Flame className="w-4 h-4 fill-current animate-pulse" />
           BREAKING NEWS

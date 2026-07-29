@@ -84,9 +84,9 @@ export function Testimonials() {
 
   return (
     <section className="py-12 bg-gray-50/30 overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-[#0A192F] mb-2">What Our Customers Say</h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-6">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#0A192F] mb-2">What Our Customers Say</h2>
           <p className="text-gray-500">Real stories from real customers</p>
         </div>
 
@@ -103,7 +103,7 @@ export function Testimonials() {
             {testimonials.map((testimonial, index) => (
               <div 
                 key={index}
-                className="snap-center shrink-0 w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] bg-white border border-gray-100 p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-auto"
+                className="snap-center shrink-0 w-[90vw] sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] bg-white border border-gray-100 p-5 sm:p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-auto"
               >
                 <div className="flex gap-1 mb-4 text-primary">
                   {[...Array(5)].map((_, i) => (

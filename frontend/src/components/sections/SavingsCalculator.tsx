@@ -1,23 +1,77 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { ArrowRight, CheckCircle2, Home, Building2, Zap, Shield, Wrench } from 'lucide-react';
+
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const CONTENT_KEY = 'HOME_SAVINGS_CALCULATOR';
+
+interface CalcContent {
+  heading: string;
+  subheading: string;
+  savingsPercent: string;
+  paybackPeriod: string;
+  feature1: string;
+  feature2: string;
+  feature3: string;
+  ctaText: string;
+  ctaImageUrl: string;
+  bottomNote: string;
+}
+
+const DEFAULTS: CalcContent = {
+  heading: 'Instant Savings Calculator',
+  subheading: 'Use our smart interactive tool to estimate your potential savings, recommended system size, and payback period by switching to Enfinite Energy.',
+  savingsPercent: '80',
+  paybackPeriod: '3 - 4',
+  feature1: 'Tier-1 Premium Solar Panels',
+  feature2: '25-Year Performance Warranty',
+  feature3: 'Zero Maintenance Setup',
+  ctaText: 'Book Free Site Survey',
+  ctaImageUrl: '/12.png',
+  bottomNote: 'By switching to solar, you protect yourself from annual tariff hikes and instantly increase your property value.',
+};
 
 export function SavingsCalculator() {
   const [bill, setBill] = useState(5000);
   const [propertyType, setPropertyType] = useState('residential');
-  
-  // Fake calculation logic for demonstration
-  // We can tweak savings based on property type slightly just for effect
+  const [content, setContent] = useState<CalcContent>(DEFAULTS);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`${API}/api/content`);
+        if (res.ok) {
+          const { map } = await res.json();
+          if (map[CONTENT_KEY]) {
+            const saved = map[CONTENT_KEY];
+            let extra: Partial<CalcContent> = {};
+            try { extra = JSON.parse(saved.description || '{}'); } catch {}
+            setContent({
+              heading:        saved.title          || DEFAULTS.heading,
+              subheading:     extra.subheading     || DEFAULTS.subheading,
+              savingsPercent: extra.savingsPercent || DEFAULTS.savingsPercent,
+              paybackPeriod:  extra.paybackPeriod  || DEFAULTS.paybackPeriod,
+              feature1:       extra.feature1       || DEFAULTS.feature1,
+              feature2:       extra.feature2       || DEFAULTS.feature2,
+              feature3:       extra.feature3       || DEFAULTS.feature3,
+              ctaText:        extra.ctaText        || DEFAULTS.ctaText,
+              ctaImageUrl:    saved.imageUrl       || DEFAULTS.ctaImageUrl,
+              bottomNote:     extra.bottomNote     || DEFAULTS.bottomNote,
+            });
+          }
+        }
+      } catch {}
+    })();
+  }, []);
+
   const multiplier = propertyType === 'commercial' ? 0.85 : 0.8;
   const annualSavings = (bill * 12 * multiplier).toLocaleString('en-IN');
   const systemSize = Math.max(1, Math.round(bill / 1200));
-  
-  // Calculate slider fill percentage
   const sliderPercentage = ((bill - 1000) / (50000 - 1000)) * 100;
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50/50 relative overflow-hidden">
+    <section className="py-8 sm:py-10 px-4 sm:px-6 lg:px-10 bg-gray-50/50 relative overflow-hidden">
       {/* Custom styles for the slider thumb */}
       <style dangerouslySetInnerHTML={{__html: `
         .custom-slider::-webkit-slider-thumb {
@@ -49,10 +103,10 @@ export function SavingsCalculator() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-5xl font-extrabold text-[#0A192F] tracking-tight mb-4">
-            Instant Savings Calculator
+            {content.heading}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Use our smart interactive tool to estimate your potential savings, recommended system size, and payback period by switching to Enfinite Energy.
+            {content.subheading}
           </p>
         </div>
 
@@ -130,19 +184,19 @@ export function SavingsCalculator() {
                   <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
                     <Zap className="w-4 h-4 text-amber-500" />
                   </div>
-                  Tier-1 Premium Solar Panels
+                  {content.feature1}
                 </li>
                 <li className="flex items-center gap-3 text-sm text-[#0A192F] font-semibold">
                   <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
                     <Shield className="w-4 h-4 text-blue-500" />
                   </div>
-                  25-Year Performance Warranty
+                  {content.feature2}
                 </li>
                 <li className="flex items-center gap-3 text-sm text-[#0A192F] font-semibold">
                   <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
                     <Wrench className="w-4 h-4 text-emerald-500" />
                   </div>
-                  Zero Maintenance Setup
+                  {content.feature3}
                 </li>
               </ul>
             </div>
@@ -152,7 +206,7 @@ export function SavingsCalculator() {
                  <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                </div>
                <p className="text-[13px] text-gray-600 leading-relaxed font-medium">
-                 By switching to solar, you protect yourself from annual tariff hikes and instantly increase your property value.
+                 {content.bottomNote}
                </p>
             </div>
           </div>
@@ -160,8 +214,8 @@ export function SavingsCalculator() {
           {/* Right: Results & CTA */}
           <div className="p-6 md:p-8 lg:p-10 md:w-1/2 bg-gradient-to-br from-[#0A192F] via-[#0d2240] to-[#112240] relative overflow-hidden flex flex-col justify-center">
             {/* Decorative Background elements */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[60px] -ml-20 -mb-20 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[80px] -mr-20 -mt-10 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[60px] -ml-20 -mb-10 pointer-events-none"></div>
             
             <div className="relative z-10 flex flex-col h-full">
               <div className="flex items-center gap-3 mb-8">
@@ -172,7 +226,7 @@ export function SavingsCalculator() {
               <div className="mb-8 bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm shadow-inner">
                 <div className="text-gray-300 text-sm mb-2 font-medium flex items-center justify-between">
                   Estimated Annual Savings
-                  <span className="text-green-400 text-[11px] bg-green-400/10 px-2.5 py-1 rounded-full font-bold">~80% Bill Reduction</span>
+                  <span className="text-green-400 text-[11px] bg-green-400/10 px-2.5 py-1 rounded-full font-bold">~{content.savingsPercent}% Bill Reduction</span>
                 </div>
                 <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 tracking-tight">
                   ₹{annualSavings}
@@ -189,19 +243,19 @@ export function SavingsCalculator() {
                 <div className="bg-white/5 border border-white/5 rounded-xl p-4">
                   <div className="text-gray-400 text-[11px] mb-1 font-medium uppercase tracking-wider">Payback Period</div>
                   <div className="text-xl font-bold text-white flex items-baseline gap-1.5">
-                    3 - 4 <span className="text-xs text-primary">Years</span>
+                    {content.paybackPeriod} <span className="text-xs text-primary">Years</span>
                   </div>
                 </div>
               </div>
               
               <div className="mt-auto">
                 <Button className="w-full py-4 text-sm font-bold rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] flex items-center justify-center gap-2 group transition-all duration-300 border border-primary/50 mb-6">
-                  Book Free Site Survey
+                  {content.ctaText}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
                 <div className="relative w-full h-36 md:h-44 rounded-xl overflow-hidden shadow-lg group">
-                  <img src="/12.png" alt="Solar Benefits" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <img src={content.ctaImageUrl} alt="Solar Benefits" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20"></div>
                   <div className="absolute inset-0 flex flex-col justify-end p-5">
                     <h4 className="text-white font-bold text-lg md:text-xl leading-tight mb-1">Empower Your Future</h4>

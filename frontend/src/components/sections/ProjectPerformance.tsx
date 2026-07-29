@@ -80,7 +80,7 @@ export const ProjectPerformance = () => {
   };
 
   return (
-    <section className="py-8 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto text-gray-300">
+    <section className="py-14 sm:py-10 px-4 sm:px-6 lg:px-10 max-w-[1400px] mx-auto text-gray-300">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Left Panel: Project Performance (Live) */}

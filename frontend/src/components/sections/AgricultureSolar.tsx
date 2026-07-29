@@ -1,16 +1,22 @@
 "use client";
 
 import React from 'react';
-import { Droplets, Sun, Sprout, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Leaf, Droplets, Sun, CheckCircle2, ChevronRight, Calculator, Tractor, Sprout, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { usePageContent } from '@/hooks/usePageContent';
 import { useLeadModal } from '@/context/LeadModalContext';
 
 export function AgricultureSolar() {
   const { openModal } = useLeadModal();
+  const content = usePageContent('HOME_AGRICULTURE', {
+    imageUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop',
+    title: 'Solar Water Pumps for Agriculture',
+    description: 'Replace expensive diesel pumps with reliable, zero-running-cost solar water pumps. Enfinite Energy provides complete solutions from site assessment to PM-KUSUM subsidy processing.'
+  });
 
   return (
-    <section className="pt-6 pb-12 md:pt-8 md:pb-16 bg-white border-t border-gray-100 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-8 sm:py-10 md:py-12 bg-white border-t border-gray-100 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           
           {/* Content Left */}
@@ -20,12 +26,12 @@ export function AgricultureSolar() {
               <span>Agriculture Solutions</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0A192F] tracking-tight mb-4">
-              Solar Power for Indian Farmers
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E3D] mb-4">
+              {content.title}
             </h2>
             
-            <p className="text-[15px] text-gray-600 mb-8 leading-relaxed">
-              Empowering authentic village areas with heavy-duty solar water pumps. Run big tubewells and irrigation systems smoothly, free of electricity bills and diesel costs.
+            <p className="text-gray-600 mb-8 leading-relaxed">
+              {content.description}
             </p>
             
             <div className="space-y-5 mb-8">
@@ -70,7 +76,7 @@ export function AgricultureSolar() {
           <div className="w-full lg:w-1/2 relative mt-8 lg:mt-0">
             <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
               <img 
-                src="/images/13.png" 
+                src={content.imageUrl} 
                 alt="Solar Powered Tubewell and Farming" 
                 className="w-full h-full object-cover"
               />

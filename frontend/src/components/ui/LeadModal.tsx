@@ -145,7 +145,7 @@ export function LeadModal() {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 74800 18007"
                   />
                 </div>
               </div>
@@ -184,7 +184,7 @@ export function LeadModal() {
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+                  className="w-full bg-gradient-to-r from-amber-400 to-orange-500 hover:brightness-110 text-[#0A192F] font-black py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 shadow-lg shadow-amber-400/25 active:scale-[0.98]"
                 >
                   {loading ? (
                     <>

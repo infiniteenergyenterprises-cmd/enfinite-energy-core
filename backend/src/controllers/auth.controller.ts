@@ -5,7 +5,7 @@ import { generateToken } from '../utils/auth';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password, firstName, lastName, roleName } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -14,13 +14,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Get or create role
-    let role = await prisma.role.findUnique({ where: { name: roleName || 'ADMIN' } });
+    // Always assign USER role for public registration
+    let role = await prisma.role.findUnique({ where: { name: 'USER' } });
     if (!role) {
       role = await prisma.role.create({
         data: {
-          name: roleName || 'ADMIN',
-          permissions: ['ALL'],
+          name: 'USER',
+          permissions: ['READ_ONLY'],
         },
       });
     }

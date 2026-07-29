@@ -1,8 +1,18 @@
-# ⚡ Enfinite Energy
+# ⚡ Enfinite Energy Core
 
-**Smart, Reliable & Sustainable Solar Solutions for India**
+**An enterprise-grade, ultra-modern Solar Energy Management Platform.**
 
-Enfinite Energy is a full-stack web platform for India's leading solar energy solutions provider. We deliver rooftop solar installations, subsidy guidance (PM Surya Ghar Yojana), net metering support, and 24/7 AMC services for homes, businesses, industries and agriculture.
+Built with Next.js & Node.js, featuring a highly secured CMS, real-time lead tracking, and a premium glassmorphic UI. Accelerating the transition to sustainable energy through cutting-edge tech. 🌍⚡
+
+## 🌍 About Enfinite Energy
+Enfinite Energy is not just a solar installation website; it is a **next-generation Solar Energy Management Ecosystem**. 
+
+Engineered with a relentless focus on aesthetics, security, and performance, this platform bridges the gap between clean energy solutions and cutting-edge software. It features a stunning, modern frontend designed to convert visitors into leads, backed by a fortified Node.js infrastructure that handles real-time data, CRM (Lead Management), and a dynamic headless CMS.
+
+**Key Highlights:**
+- 🛡️ **Military-Grade Security:** Hardened APIs with JWT, Helmet, and Rate Limiting.
+- ⚡ **Lightning Fast:** Optimized with Next.js, Server-Side Rendering (SSR), and Cloudinary.
+- 🎨 **Premium Aesthetics:** Glassmorphism UI, fluid micro-animations, and dynamic data rendering.
 
 ---
 
@@ -20,7 +30,7 @@ Enfinite Energy is a full-stack web platform for India's leading solar energy so
 ## 📁 Project Structure
 
 ```
-SOLAR SMILE/
+INFINITE ENERGY/
 ├── frontend/          # Next.js web app
 │   └── src/
 │       ├── app/       # Page routes (Next.js App Router)
