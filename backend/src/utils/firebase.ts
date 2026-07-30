@@ -1,4 +1,4 @@
-import admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,9 +11,9 @@ if (serviceAccountKey) {
   try {
     const serviceAccount = JSON.parse(serviceAccountKey);
     
-    if (!admin.apps.length) {
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
+    if (!admin?.apps?.length) {
+      admin?.initializeApp?.({
+        credential: admin?.credential?.cert?.(serviceAccount)
       });
       console.log('Firebase Admin SDK initialized successfully.');
     }

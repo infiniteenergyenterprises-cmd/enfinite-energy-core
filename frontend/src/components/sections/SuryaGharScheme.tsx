@@ -71,7 +71,7 @@ export function SuryaGharScheme() {
             </div>
 
             <div className="pt-4 flex flex-wrap gap-4">
-              <button onClick={() => openModal('CONTACT')} className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-orange-500/25 hover:scale-105 transition-all duration-300">
+              <button onClick={() => openModal('PM_SURYA_GHAR')} className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-orange-500/25 hover:scale-105 transition-all duration-300">
                 Check Your Eligibility <ArrowRight className="w-5 h-5" />
               </button>
               <a href="tel:+917480018007" className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg transition-all duration-300">

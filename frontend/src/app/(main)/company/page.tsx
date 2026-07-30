@@ -107,6 +107,7 @@ export default function CompanyPage() {
   const [heroTitle, setHeroTitle] = useState("Powering India's Sustainable Future");
   const [heroDesc,  setHeroDesc]  = useState('We are a team of passionate engineers, sales professionals, and sustainability advocates committed to making solar energy accessible to every Indian.');
   const [heroImg,   setHeroImg]   = useState('');
+  const [cmsFounder, setCmsFounder] = useState<any|null>(null);
 
   useEffect(() => {
     fetch('http://localhost:5000/api/content')
@@ -115,6 +116,7 @@ export default function CompanyPage() {
         const map = d.map || {};
         if (map['ABOUT_STATS'])    { try { setCmsStats(JSON.parse(map['ABOUT_STATS'].description || '[]')); } catch {} }
         if (map['ABOUT_TEAM'])     { try { setCmsTeam(JSON.parse(map['ABOUT_TEAM'].description || '[]')); } catch {} }
+        if (map['ABOUT_FOUNDER'])  { try { setCmsFounder(JSON.parse(map['ABOUT_FOUNDER'].description || '{}')); } catch {} }
         if (map['ABOUT_HERO']) {
           if (map['ABOUT_HERO'].title)       setHeroTitle(map['ABOUT_HERO'].title);
           if (map['ABOUT_HERO'].description) setHeroDesc(map['ABOUT_HERO'].description);
@@ -127,6 +129,13 @@ export default function CompanyPage() {
   // Use CMS data if available, else fallback to hardcoded
   const displayStats = cmsStats && cmsStats.length > 0 ? cmsStats : impactStats.map(s => ({ val: s.val, label: s.label }));
   const displayTeam  = cmsTeam  && cmsTeam.length  > 0 ? cmsTeam  : team;
+  const fallbackFounder = {
+    name: 'Rajesh Sharma',
+    role: 'Founder & CEO',
+    img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&q=80',
+    bio: 'Rajesh oversees strategic growth at Enfinite Energy, bringing over 15 years of project delivery experience in clean utilities. His vision is to make solar energy accessible to every Indian household and business. Under his leadership, the company has grown from a visionary startup to one of India\'s most trusted solar energy solutions providers.'
+  };
+  const displayFounder = cmsFounder && cmsFounder.name ? cmsFounder : fallbackFounder;
 
   /* Modal state */
   const [modalContent, setModalContent] = useState<{ title: string; subtitle?: string; desc: string; type?: string } | null>(null);
@@ -279,6 +288,39 @@ export default function CompanyPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0B1E3D]/50 to-transparent pointer-events-none" />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
               <p className="bg-[#F5A623] text-[#0B1E3D] font-black text-xs px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><Sun className="w-4 h-4 animate-spin"/> Book Site Survey Now</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ FOUNDER SECTION ══ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-6 mb-12">
+        <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-14 shadow-lg relative min-h-[450px] flex items-center">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5A623]/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-14 items-center relative z-10 w-full">
+            <div className="md:col-span-5 flex justify-center shrink-0">
+              <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden ring-4 ring-white shadow-xl group">
+                <img src={displayFounder.img} alt={displayFounder.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B1E3D]/80 via-transparent to-transparent opacity-80" />
+                <div className="absolute bottom-5 left-5 text-white">
+                  <p className="font-black text-2xl">{displayFounder.name}</p>
+                  <p className="text-base text-[#F5A623] font-bold">{displayFounder.role}</p>
+                </div>
+              </div>
+            </div>
+            <div className="md:col-span-7 py-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-[2px] bg-[#F5A623] shrink-0" />
+                <p className="text-[#F5A623] text-sm font-black uppercase tracking-widest leading-none">A Message From The Founder</p>
+              </div>
+              <h2 className="text-2xl md:text-4xl font-black text-gray-900 mb-5 leading-tight">
+                Driving the <span className="text-[#F5A623]">Solar Revolution</span>
+              </h2>
+              <div className="text-gray-600 space-y-5 text-lg leading-relaxed">
+                {displayFounder.bio.split('\n').map((para: string, idx: number) => (
+                  <p key={idx}>{para}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -498,6 +540,8 @@ export default function CompanyPage() {
         </div>
       </section>
 
+
+
       {/* ══ LEADERSHIP TEAM ══ */}
       <section id="leadership" className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-6 py-12 scroll-mt-12">
         <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 sm:gap-0">
@@ -514,16 +558,16 @@ export default function CompanyPage() {
         </div>
         <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 gap-4 md:grid md:grid-cols-4 lg:grid-cols-5 md:overflow-x-visible md:pb-0 scrollbar-hide">
           {displayTeam.map((t,i)=>(
-            <div key={i} onClick={() => handleOpenDetail(t.name, t.bio, `${t.role} (${t.exp})`, 'member')} className="bg-white border border-gray-100 rounded-2xl p-5 text-center shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group cursor-pointer w-[245px] md:w-auto shrink-0 snap-start">
-              <div className="w-18 h-18 mx-auto rounded-full overflow-hidden border-3 border-[#F5A623]/20 mb-3 group-hover:border-[#F5A623]/60 transition-all" style={{width:'72px',height:'72px'}}>
+            <div key={i} onClick={() => handleOpenDetail(t.name, t.bio, `${t.role} (${t.exp})`, 'member')} className="bg-white border border-gray-100 rounded-2xl p-5 text-center shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group cursor-pointer w-[245px] md:w-auto shrink-0 snap-start flex flex-col items-center">
+              <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-3 border-[#F5A623]/20 mb-3 group-hover:border-[#F5A623]/60 transition-all shrink-0">
                 <img src={t.img} alt={t.name} className="w-full h-full object-cover" />
               </div>
               <h3 className="text-sm font-black text-gray-900">{t.name}</h3>
               <p className="text-[11px] text-[#F5A623] font-bold mt-0.5">{t.role}</p>
-              <p className="text-[10px] text-gray-400 mt-1.5 leading-relaxed truncate">{t.exp}</p>
+              <p className="text-[10px] text-gray-500 mt-1.5 leading-relaxed line-clamp-3 h-[45px]">{t.bio || t.exp}</p>
               <div className="flex justify-center gap-2 mt-3" onClick={(e)=>e.stopPropagation()}>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="w-7 h-7 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-all text-[10px] font-black">in</a>
-                <a href={`mailto:infiniteenergyenterprises@gmail.com?subject=Inquiry to ${t.name}`} className="w-7 h-7 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-all">
+                <a href={t.linkedin || "https://linkedin.com"} target="_blank" rel="noreferrer" className="w-7 h-7 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-all text-[10px] font-black">in</a>
+                <a href={t.email ? `mailto:${t.email}` : `mailto:infiniteenergyenterprises@gmail.com?subject=Inquiry to ${t.name}`} className="w-7 h-7 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-all">
                   <Mail className="w-3 h-3" />
                 </a>
               </div>

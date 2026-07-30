@@ -39,8 +39,7 @@ export function EventCard({ day, month, year, title, location, desc, image, time
       const data = await res.json();
       if (data.success) {
         setRegistered(true);
-        setShowModal(false);
-        alert('Successfully registered for the event!');
+        // Instead of alert and closing, we will let the UI show the success state.
       } else {
         alert(data.message || 'Registration failed');
       }
@@ -124,53 +123,78 @@ export function EventCard({ day, month, year, title, location, desc, image, time
               <X className="w-5 h-5" />
             </button>
             
-            <h3 className="text-lg font-black text-white mb-1">Register for Event</h3>
-            <p className="text-xs text-primary font-bold mb-4">{title}</p>
-            
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Full Name</label>
-                <input 
-                  type="text" 
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name" 
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
-                />
+            {registered ? (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-black text-white mb-2">Registration Successful!</h3>
+                <p className="text-sm text-white/60 mb-6">
+                  Thank you for registering for <strong>{title}</strong>. We've sent a confirmation email to you with the details.
+                </p>
+                <button 
+                  onClick={() => setShowModal(false)}
+                  className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                >
+                  Close Window
+                </button>
               </div>
-              
-              <div>
-                <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Email Address</label>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email" 
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Mobile Number</label>
-                <input 
-                  type="tel" 
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Enter mobile number" 
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
-                />
-              </div>
-              
-              <button 
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-primary hover:brightness-110 disabled:opacity-50 text-[#0A192F] font-black py-3 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm mt-2"
-              >
-                {submitting ? 'Submitting Registration...' : 'Confirm Registration'}
-              </button>
-            </form>
+            ) : (
+              <>
+                <h3 className="text-lg font-black text-white mb-1">Register for Event</h3>
+                <p className="text-xs text-primary font-bold mb-4">{title}</p>
+                
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter your name" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <input 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Mobile Number</label>
+                    <input 
+                      type="tel" 
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Enter mobile number" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <button 
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-primary hover:brightness-110 disabled:opacity-50 text-[#0A192F] font-black py-3 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm mt-2 flex items-center justify-center gap-2"
+                  >
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#0A192F]/30 border-t-[#0A192F] rounded-full animate-spin"></div>
+                        Submitting...
+                      </>
+                    ) : 'Confirm Registration'}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -166,3 +166,226 @@ export const sendAdminNotification = async (lead: LeadData): Promise<boolean> =>
     return false;
   }
 };
+
+export const sendUserEventConfirmation = async (lead: LeadData): Promise<boolean> => {
+  if (!lead.email || !process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    return false;
+  }
+
+  const subject = `Registration Successful - ${lead.message?.split(':')[1]?.split('(')[0]?.trim() || 'Enfinite Energy Event'}`;
+  
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+      <tr>
+        <td style="background:#0B1E3D;padding:28px 32px;">
+          <h1 style="margin:0;color:#fff;font-size:22px;font-weight:800;">Event Registration Confirmed</h1>
+        </td>
+      </tr>
+      <tr><td style="background:linear-gradient(90deg,#F5A623,#F97316);height:4px;"></td></tr>
+      <tr>
+        <td style="padding:28px 32px;">
+          <p style="margin:0 0 16px;color:#374151;font-size:16px;">Dear <strong>${lead.name}</strong>,</p>
+          <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.6;">
+            Thank you for registering for our event: <strong>${lead.message?.split(':')[1]?.trim() || 'Solar Event'}</strong>. 
+            Your registration has been successfully received by our team.
+          </p>
+          <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.6;">
+            We are excited to host you. One of our representatives may reach out to you shortly with further details.
+          </p>
+          <p style="margin:0;color:#374151;font-size:14px;line-height:1.6;">Best Regards,<br><strong>Enfinite Energy Team</strong></p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  try {
+    await transporter.sendMail({
+      from: `"Enfinite Energy" <${process.env.SMTP_EMAIL}>`,
+      to: lead.email,
+      subject,
+      html,
+    });
+    console.log(`✅ User Event Confirmation sent → ${lead.email}`);
+    return true;
+  } catch (err) {
+    console.error('❌ User Email failed:', err);
+    return false;
+  }
+};
+
+export const sendUserSurveyConfirmation = async (lead: LeadData): Promise<boolean> => {
+  if (!lead.email || !process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    return false;
+  }
+
+  const subject = `Free Site Survey Request Received - Enfinite Energy`;
+  
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+      <tr>
+        <td style="background:#0B1E3D;padding:28px 32px;">
+          <h1 style="margin:0;color:#fff;font-size:22px;font-weight:800;">Site Survey Request Confirmed</h1>
+        </td>
+      </tr>
+      <tr><td style="background:linear-gradient(90deg,#F5A623,#F97316);height:4px;"></td></tr>
+      <tr>
+        <td style="padding:28px 32px;">
+          <p style="margin:0 0 16px;color:#374151;font-size:16px;">Dear <strong>${lead.name}</strong>,</p>
+          <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.6;">
+            Thank you for taking the first step towards solar savings! We have received your request for a <strong>Free Site Survey</strong>.
+          </p>
+          <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.6;">
+            Our expert team is reviewing your details and will contact you at <strong>${lead.phone}</strong> shortly to schedule a convenient time for the survey.
+          </p>
+          <p style="margin:0;color:#374151;font-size:14px;line-height:1.6;">Best Regards,<br><strong>Enfinite Energy Team</strong></p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  try {
+    await transporter.sendMail({
+      from: `"Enfinite Energy" <${process.env.SMTP_EMAIL}>`,
+      to: lead.email,
+      subject,
+      html,
+    });
+    console.log(`✅ User Survey Confirmation sent → ${lead.email}`);
+    return true;
+  } catch (err) {
+    console.error('❌ User Email failed:', err);
+    return false;
+  }
+};
+
+export const sendUserGeneralConfirmation = async (lead: LeadData): Promise<boolean> => {
+  if (!lead.email || !process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    return false;
+  }
+
+  const meta = getMeta(lead.type);
+  const subject = `Thank you for contacting Enfinite Energy`;
+  
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+      <tr>
+        <td style="background:#0B1E3D;padding:28px 32px;">
+          <h1 style="margin:0;color:#fff;font-size:22px;font-weight:800;">We've Received Your Inquiry</h1>
+        </td>
+      </tr>
+      <tr><td style="background:linear-gradient(90deg,#F5A623,#F97316);height:4px;"></td></tr>
+      <tr>
+        <td style="padding:28px 32px;">
+          <p style="margin:0 0 16px;color:#374151;font-size:16px;">Dear <strong>${lead.name}</strong>,</p>
+          <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.6;">
+            Thank you for visiting Enfinite Energy and submitting a request for <strong>${meta.label}</strong>. 
+            We have successfully received your details.
+          </p>
+          <p style="margin:0 0 20px;color:#374151;font-size:14px;line-height:1.6;">
+            Our dedicated support team is reviewing your inquiry and will reach out to you shortly at <strong>${lead.phone || lead.email}</strong> to assist you further.
+          </p>
+          <p style="margin:0;color:#374151;font-size:14px;line-height:1.6;">Warm Regards,<br><strong>Support Team, Enfinite Energy</strong></p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  try {
+    await transporter.sendMail({
+      from: `"Enfinite Energy Support" <${process.env.SMTP_EMAIL}>`,
+      to: lead.email,
+      subject,
+      html,
+    });
+    console.log(`✅ User General Confirmation sent → ${lead.email}`);
+    return true;
+  } catch (err) {
+    console.error('❌ User Email failed:', err);
+    return false;
+  }
+};
+
+export const sendAdminAIConfirmation = async (lead: LeadData): Promise<boolean> => {
+  if (!lead.email || !process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+    return false;
+  }
+
+  const subject = `Your Registration is Approved - Welcome to Enfinite Energy`;
+  
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+      <tr>
+        <td style="background:#0B1E3D;padding:28px 32px;text-align:center;">
+          <h1 style="margin:0;color:#fff;font-size:24px;font-weight:800;">Registration Approved</h1>
+          <p style="margin:8px 0 0;color:#F5A623;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Official Confirmation</p>
+        </td>
+      </tr>
+      <tr><td style="background:linear-gradient(90deg,#10B981,#34D399);height:4px;"></td></tr>
+      <tr>
+        <td style="padding:32px;">
+          <p style="margin:0 0 16px;color:#1F2937;font-size:16px;">Hello <strong>${lead.name}</strong>,</p>
+          <p style="margin:0 0 20px;color:#4B5563;font-size:15px;line-height:1.7;">
+            We have reviewed your registration for <strong>${lead.message?.split(':')[1]?.trim() || 'the upcoming event'}</strong> and are thrilled to officially approve your attendance!
+          </p>
+          <div style="background:#F3F4F6;border-radius:8px;padding:20px;margin-bottom:24px;border-left:4px solid #F5A623;">
+            <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#374151;text-transform:uppercase;">Registration Details</p>
+            <p style="margin:0 0 4px;font-size:14px;color:#4B5563;"><strong>Name:</strong> ${lead.name}</p>
+            <p style="margin:0 0 4px;font-size:14px;color:#4B5563;"><strong>Status:</strong> <span style="color:#10B981;font-weight:bold;">Approved ✅</span></p>
+          </div>
+          <p style="margin:0 0 24px;color:#4B5563;font-size:15px;line-height:1.7;">
+            Please keep this email handy. We look forward to meeting you and discussing the future of smart solar solutions together.
+          </p>
+          <p style="margin:0;color:#1F2937;font-size:15px;line-height:1.6;">Warm regards,<br><strong>Admin Team, Enfinite Energy</strong></p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#F9FAFB;border-top:1px solid #E5E7EB;padding:20px;text-align:center;">
+          <p style="margin:0;font-size:12px;color:#9CA3AF;">This is an automated AI-assisted confirmation email.</p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+  try {
+    await transporter.sendMail({
+      from: `"Enfinite Energy Admin" <${process.env.SMTP_EMAIL}>`,
+      to: lead.email,
+      subject,
+      html,
+    });
+    console.log(`✅ Admin AI Confirmation sent → ${lead.email}`);
+    return true;
+  } catch (err) {
+    console.error('❌ Admin AI Email failed:', err);
+    return false;
+  }
+};
+

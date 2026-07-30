@@ -122,6 +122,43 @@ function ContactInfoManager({ map }: { map:Record<string,any> }) {
   );
 }
 
+/* ─── Founder Manager ─────────────────────────────────────── */
+function FounderManager({ map }: { map:Record<string,any> }) {
+  const K = 'ABOUT_FOUNDER';
+  let saved: any = {};
+  try { saved = JSON.parse(map[K]?.description || '{}'); } catch {}
+
+  const [name, setName] = useState(saved.name || 'Rajesh Sharma');
+  const [role, setRole] = useState(saved.role || 'Founder & CEO');
+  const [img, setImg] = useState(saved.img || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&q=80');
+  const [bio, setBio] = useState(saved.bio || 'Rajesh oversees strategic growth at Enfinite Energy, bringing over 15 years of project delivery experience in clean utilities. His vision is to make solar energy accessible to every Indian household and business. Under his leadership, the company has grown from a visionary startup to one of India\'s most trusted solar energy solutions providers.');
+  const [sv, setSv] = useState(false);
+
+  const save = async () => {
+    setSv(true);
+    const payload = JSON.stringify({ name, role, img, bio });
+    await saveContent(K, 'About Founder', 'Founder', payload, img);
+    setSv(false); alert('Founder info saved!');
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <Field label="Name" value={name} onChange={setName} maxLen={60} />
+          <Field label="Role" value={role} onChange={setRole} maxLen={60} />
+          <Field label="Bio/Message" value={bio} onChange={setBio} maxLen={800} rows={5} />
+        </div>
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">Founder Photo</p>
+          <ImgUpload value={img} onChange={setImg} />
+        </div>
+      </div>
+      <div className="flex justify-end"><SaveBtn saving={sv} onClick={save} /></div>
+    </div>
+  );
+}
+
 /* ─── Stats Manager ─────────────────────────────────────── */
 function StatsManager({ map }: { map:Record<string,any> }) {
   const K = 'ABOUT_STATS';
@@ -165,8 +202,8 @@ function StatsManager({ map }: { map:Record<string,any> }) {
 }
 
 /* ─── Team Manager ──────────────────────────────────────── */
-interface TeamMember { name:string; role:string; exp:string; img:string; bio:string; }
-const EMPTY_MEMBER = (): TeamMember => ({ name:'', role:'', exp:'', img:'', bio:'' });
+interface TeamMember { name:string; role:string; exp:string; img:string; bio:string; linkedin?:string; email?:string; }
+const EMPTY_MEMBER = (): TeamMember => ({ name:'', role:'', exp:'', img:'', bio:'', linkedin:'', email:'' });
 
 function TeamManager({ map }: { map:Record<string,any> }) {
   const K = 'ABOUT_TEAM';
@@ -247,6 +284,8 @@ function TeamManager({ map }: { map:Record<string,any> }) {
               <Field label="Role/Title" value={form.role} onChange={v=>setForm(p=>({...p,role:v}))} maxLen={60} placeholder="CEO, CTO..."/>
               <Field label="Experience" value={form.exp} onChange={v=>setForm(p=>({...p,exp:v}))} maxLen={80} placeholder="15+ years in..."/>
               <Field label="Bio" value={form.bio} onChange={v=>setForm(p=>({...p,bio:v}))} maxLen={200} rows={3} placeholder="Short bio..."/>
+              <Field label="LinkedIn URL" value={form.linkedin || ''} onChange={v=>setForm(p=>({...p,linkedin:v}))} maxLen={200} placeholder="https://linkedin.com/in/..."/>
+              <Field label="Email Address" value={form.email || ''} onChange={v=>setForm(p=>({...p,email:v}))} maxLen={100} placeholder="name@example.com"/>
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">Profile Photo</p>
@@ -441,7 +480,7 @@ function ContactHeroManager({ map }: { map:Record<string,any> }) {
 export default function PagesAdminPage() {
   const [map,     setMap]     = useState<Record<string,any>>({});
   const [loading, setLoading] = useState(true);
-  const [tab,     setTab]     = useState<'contact-info'|'offices'|'stats'|'team'|'about-hero'|'contact-hero'>('contact-info');
+  const [tab,     setTab]     = useState<'contact-info'|'offices'|'founder'|'stats'|'team'|'about-hero'|'contact-hero'>('contact-info');
 
   useEffect(() => { getContent().then(m => { setMap(m); setLoading(false); }); }, []);
 
@@ -450,6 +489,7 @@ export default function PagesAdminPage() {
   const TABS = [
     { id:'contact-info',  label:'Contact Info',   icon:<Phone className="w-4 h-4"/>     },
     { id:'offices',       label:'Office Locations',icon:<Building2 className="w-4 h-4"/>},
+    { id:'founder',       label:'Founder Info',    icon:<Users className="w-4 h-4"/>    },
     { id:'stats',         label:'Impact Stats',    icon:<BarChart3 className="w-4 h-4"/> },
     { id:'team',          label:'Team Members',    icon:<Users className="w-4 h-4"/>     },
     { id:'about-hero',    label:'About Hero',      icon:<Globe className="w-4 h-4"/>     },
@@ -479,6 +519,7 @@ export default function PagesAdminPage() {
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
         {tab==='contact-info' && (<><div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5"><Phone className="w-4 h-4 text-amber-400"/><h2 className="text-xl font-black text-white">Contact Information</h2><span className="ml-auto text-xs text-white/30">Shown on Contact page & Footer</span></div><ContactInfoManager map={map}/></>)}
         {tab==='offices'      && (<><div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5"><Building2 className="w-4 h-4 text-amber-400"/><h2 className="text-xl font-black text-white">Office Locations</h2><span className="ml-auto text-xs text-white/30">Shown on Contact page</span></div><OfficeManager map={map}/></>)}
+        {tab==='founder'      && (<><div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5"><Users className="w-4 h-4 text-amber-400"/><h2 className="text-xl font-black text-white">Founder Information</h2><span className="ml-auto text-xs text-white/30">Shown on About/Company page</span></div><FounderManager map={map}/></>)}
         {tab==='stats'        && (<><div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5"><BarChart3 className="w-4 h-4 text-amber-400"/><h2 className="text-xl font-black text-white">Impact Stats</h2><span className="ml-auto text-xs text-white/30">Shown on About/Company page</span></div><StatsManager map={map}/></>)}
         {tab==='team'         && (<><div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5"><Users className="w-4 h-4 text-amber-400"/><h2 className="text-xl font-black text-white">Team Members</h2><span className="ml-auto text-xs text-white/30">Shown on About/Company page</span></div><TeamManager map={map}/></>)}
         {tab==='about-hero'   && (<><div className="flex items-center gap-2 border-b border-white/10 pb-3 mb-5"><Globe className="w-4 h-4 text-amber-400"/><h2 className="text-xl font-black text-white">About Page Hero</h2></div><AboutHeroManager map={map}/></>)}

@@ -142,10 +142,14 @@ export function LeadModal() {
                     type="tel" 
                     name="phone" 
                     required 
+                    pattern="[0-9]{10}"
+                    maxLength={10}
+                    minLength={10}
+                    title="Please enter a valid 10-digit mobile number"
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                    placeholder="+91 74800 18007"
+                    placeholder="e.g. 9876543210"
                   />
                 </div>
               </div>
@@ -159,6 +163,7 @@ export function LeadModal() {
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all bg-white"
                 >
                   <option value="CONTACT">General Inquiry</option>
+                  <option value="PM_SURYA_GHAR">PM Surya Ghar Yojana</option>
                   <option value="Residential Solar">Residential Solar</option>
                   <option value="Commercial Solar">Commercial Solar</option>
                   <option value="Industrial Solar">Industrial Solar</option>

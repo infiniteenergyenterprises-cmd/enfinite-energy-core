@@ -169,7 +169,7 @@ export function HeroSection() {
           </div>
 
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight text-center lg:text-left drop-shadow-2xl animate-fade-in"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight text-center lg:text-left drop-shadow-2xl animate-fade-in"
           >
             {heroText.title}
           </h1>

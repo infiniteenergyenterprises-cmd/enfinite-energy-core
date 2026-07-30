@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
-import { ArrowRight, CheckCircle2, Home, Building2, Zap, Shield, Wrench } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Home, Building2, Zap, Shield, Wrench, X } from 'lucide-react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 const CONTENT_KEY = 'HOME_SAVINGS_CALCULATOR';
@@ -36,6 +36,49 @@ export function SavingsCalculator() {
   const [bill, setBill] = useState(5000);
   const [propertyType, setPropertyType] = useState('residential');
   const [content, setContent] = useState<CalcContent>(DEFAULTS);
+
+  // Modal State
+  const [showModal, setShowModal] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [registered, setRegistered] = useState(false);
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phone) return alert('Name and Mobile Number are required.');
+    setSubmitting(true);
+    
+    const systemSize = Math.max(1, Math.round(bill / 1200));
+    const annualSavings = (bill * 12 * (propertyType === 'commercial' ? 0.85 : 0.8)).toLocaleString('en-IN');
+    
+    try {
+      const res = await fetch(`${API}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message: `Requested Free Site Survey. Property: ${propertyType}, Monthly Bill: ₹${bill}, System Size: ${systemSize}kW, Est. Savings: ₹${annualSavings}. Address: ${address}`,
+          type: 'SURVEY'
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRegistered(true);
+      } else {
+        alert(data.message || 'Submission failed');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error, please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -249,7 +292,10 @@ export function SavingsCalculator() {
               </div>
               
               <div className="mt-auto">
-                <Button className="w-full py-4 text-sm font-bold rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] flex items-center justify-center gap-2 group transition-all duration-300 border border-primary/50 mb-6">
+                <Button 
+                  onClick={() => setShowModal(true)}
+                  className="w-full py-4 text-sm font-bold rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.3)] flex items-center justify-center gap-2 group transition-all duration-300 border border-primary/50 mb-6"
+                >
                   {content.ctaText}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -268,6 +314,105 @@ export function SavingsCalculator() {
           
         </div>
       </div>
+
+      {/* Survey Registration Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => { setShowModal(false); setRegistered(false); }}
+              className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            {registered ? (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-black text-white mb-2">Request Submitted!</h3>
+                <p className="text-sm text-white/60 mb-6">
+                  Thank you! We have received your request for a Free Site Survey. Our expert will contact you shortly to schedule the visit.
+                </p>
+                <button 
+                  onClick={() => { setShowModal(false); setRegistered(false); }}
+                  className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                >
+                  Close Window
+                </button>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-lg font-black text-white mb-1">Book Free Site Survey</h3>
+                <p className="text-xs text-primary font-bold mb-4">Take the first step towards solar savings</p>
+                
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter your name" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <input 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Mobile Number</label>
+                    <input 
+                      type="tel" 
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Enter mobile number" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Installation Address</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="City or full address" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <button 
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-primary hover:brightness-110 disabled:opacity-50 text-[#0A192F] font-black py-3 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm mt-2 flex items-center justify-center gap-2"
+                  >
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#0A192F]/30 border-t-[#0A192F] rounded-full animate-spin"></div>
+                        Submitting...
+                      </>
+                    ) : 'Submit Request'}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

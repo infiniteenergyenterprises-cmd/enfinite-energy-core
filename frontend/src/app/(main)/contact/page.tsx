@@ -67,6 +67,8 @@ export default function ContactPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [uploadedFileName, setUploadedFileName] = useState('');
   const [consultSubmitted, setConsultSubmitted] = useState(false);
+  const [consultError, setConsultError] = useState('');
+  const [consultLoading, setConsultLoading] = useState(false);
 
   /* 2. Solar Calculator State */
   const [billInput, setBillInput] = useState<number>(5000);
@@ -114,6 +116,8 @@ export default function ContactPage() {
     location: ''
   });
   const [surveySubmitted, setSurveySubmitted] = useState(false);
+  const [surveyError, setSurveyError] = useState('');
+  const [surveyLoading, setSurveyLoading] = useState(false);
   const [selectedMapLoc, setSelectedMapLoc] = useState('bhabua');
 
   /* Services array for checkboxes */
@@ -130,28 +134,82 @@ export default function ContactPage() {
     }
   };
 
-  const handleConsultSubmit = (e: React.FormEvent) => {
+  const handleConsultSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setConsultSubmitted(true);
-    setTimeout(() => {
-      setConsultSubmitted(false);
-      setConsultForm({
-        name: '', mobile: '', email: '', city: '', state: 'Uttar Pradesh',
-        customerType: 'Residential', monthlyBill: '', roofArea: '',
-        roofType: 'Concrete Roof', message: '', services: []
+    setConsultError('');
+    setConsultLoading(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: consultForm.name,
+          email: consultForm.email,
+          phone: consultForm.mobile,
+          type: consultForm.customerType.toUpperCase(),
+          message: `City: ${consultForm.city}, State: ${consultForm.state}, Bill: ${consultForm.monthlyBill}, Roof: ${consultForm.roofArea} sq.ft (${consultForm.roofType}), Services: ${selectedServices.join(', ')}. ${consultForm.message}`
+        })
       });
-      setSelectedServices([]);
-      setUploadedFileName('');
-    }, 3000);
+      const data = await res.json();
+      if (data.success) {
+        setConsultSubmitted(true);
+        setTimeout(() => {
+          setConsultSubmitted(false);
+          setConsultForm({
+            name: '', mobile: '', email: '', city: '', state: 'Uttar Pradesh',
+            customerType: 'Residential', monthlyBill: '', roofArea: '',
+            roofType: 'Concrete Roof', message: '', services: []
+          });
+          setSelectedServices([]);
+          setUploadedFileName('');
+        }, 3000);
+      } else {
+        setConsultError(data.message || 'Submission failed');
+      }
+    } catch (err) {
+      setConsultError('Network error. Please try again later.');
+    }
+    setConsultLoading(false);
   };
 
-  const handleSurveySubmit = (e: React.FormEvent) => {
+  const handleSurveySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSurveySubmitted(true);
-    setTimeout(() => {
-      setSurveySubmitted(false);
-      setSurveyForm({ date: '2026-07-27', timeSlot: '10:00 AM - 12:00 PM', location: '' });
-    }, 3000);
+    setSurveyError('');
+    setSurveyLoading(true);
+    
+    // Quick prompt for Name, Email, Phone since survey form only has Date/Time/Location in UI
+    const name = window.prompt("Please enter your Full Name:");
+    if (!name) { setSurveyLoading(false); return; }
+    const phone = window.prompt("Please enter your Mobile Number (10 digits):");
+    if (!phone || phone.length !== 10) { alert('Valid 10-digit phone required.'); setSurveyLoading(false); return; }
+    const email = window.prompt("Please enter your Email (Optional):") || '';
+
+    try {
+      const res = await fetch('http://localhost:5000/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          phone: phone,
+          type: 'SURVEY',
+          message: `Survey Date: ${surveyForm.date}, Time: ${surveyForm.timeSlot}, Location: ${surveyForm.location}`
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSurveySubmitted(true);
+        setTimeout(() => {
+          setSurveySubmitted(false);
+          setSurveyForm({ date: '2026-07-27', timeSlot: '10:00 AM - 12:00 PM', location: '' });
+        }, 3000);
+      } else {
+        alert(data.message || 'Submission failed');
+      }
+    } catch (err) {
+      alert('Network error. Please try again later.');
+    }
+    setSurveyLoading(false);
   };
 
   return (
@@ -227,6 +285,11 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleConsultSubmit} className="space-y-4">
+                {consultError && (
+                  <div className="bg-red-50 text-red-600 p-3 rounded-lg text-xs border border-red-100 mb-2">
+                    {consultError}
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-[10px] uppercase font-black text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
@@ -234,7 +297,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className="block text-[10px] uppercase font-black text-gray-700 mb-1">Mobile Number <span className="text-red-500">*</span></label>
-                    <input required type="tel" placeholder="Enter mobile number" value={consultForm.mobile} onChange={(e) => setConsultForm({...consultForm, mobile: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all shadow-sm" />
+                    <input required type="tel" pattern="[0-9]{10}" maxLength={10} minLength={10} title="10-digit mobile number" placeholder="Enter mobile number" value={consultForm.mobile} onChange={(e) => setConsultForm({...consultForm, mobile: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all shadow-sm" />
                   </div>
                 </div>
 
@@ -317,8 +380,8 @@ export default function ContactPage() {
                   <textarea rows={3} placeholder="Tell us about your requirement..." value={consultForm.message} onChange={(e) => setConsultForm({...consultForm, message: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] transition-all resize-none shadow-sm" />
                 </div>
 
-                <button type="submit" className="w-full bg-[#F5A623] text-[#0B1E3D] font-black py-3 rounded-xl hover:brightness-110 transition-all shadow-md shadow-[#F5A623]/20 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
-                  Get Free Quote <ArrowRight className="w-4 h-4" />
+                <button type="submit" disabled={consultLoading} className="w-full bg-[#F5A623] text-[#0B1E3D] font-black py-3 rounded-xl hover:brightness-110 transition-all shadow-md shadow-[#F5A623]/20 flex items-center justify-center gap-2 text-xs uppercase tracking-wider disabled:opacity-70">
+                  {consultLoading ? 'Submitting...' : 'Get Free Quote'} <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
             )}
@@ -403,8 +466,8 @@ export default function ContactPage() {
                     <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Your Location / Address</label>
                     <input required type="text" placeholder="Enter complete address" value={surveyForm.location} onChange={(e) => setSurveyForm({...surveyForm, location: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-3 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
                   </div>
-                  <button type="submit" className="w-full bg-[#0B1E3D] hover:bg-[#1a3260] text-white font-black py-3.5 rounded-xl text-xs transition-all uppercase tracking-wider shadow-md mt-2">
-                    Book Site Survey
+                  <button type="submit" disabled={surveyLoading} className="w-full bg-[#0B1E3D] hover:bg-[#1a3260] text-white font-black py-3.5 rounded-xl text-xs transition-all uppercase tracking-wider shadow-md mt-2 disabled:opacity-70">
+                    {surveyLoading ? 'Booking...' : 'Book Site Survey'}
                   </button>
                 </form>
               )}

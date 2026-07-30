@@ -41,7 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (pathname === '/admin/login') return <>{children}</>;
 
   return (
-    <div className="flex h-screen" style={{background:'#0a0f1e'}}>
+    <div className="flex h-screen w-full overflow-hidden" style={{background:'#0a0f1e'}}>
 
       {/* ── Sidebar ── */}
       <aside className="w-60 bg-[#0B1E3D] flex flex-col shrink-0 hidden md:flex">
@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5">
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto scrollbar-hide">
           {navItems.map(item => {
             const active = pathname === item.href;
             return (
