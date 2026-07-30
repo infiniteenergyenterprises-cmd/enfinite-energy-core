@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { customConfirm } from '@/components/utils/customConfirm';
 import {
   Save, Loader2, Upload, Link as LinkIcon, Image as ImageIcon,
   Trash2, Plus, Briefcase, Edit2, ToggleLeft, ToggleRight, X, Wand2
@@ -161,7 +162,7 @@ function JobsManager() {
   };
 
   const del = async (id: string) => {
-    if (!confirm('Delete this job posting?')) return;
+    if (!(await customConfirm('Delete this job posting?'))) return;
     await fetch(`${API}/api/careers/${id}`, { method:'DELETE' });
     setJobs(p => p.filter(j => j.id !== id));
   };

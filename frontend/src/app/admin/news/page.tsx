@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { customConfirm } from '@/components/utils/customConfirm';
 import {
   Save, Loader2, Upload, Link as LinkIcon, Image as ImageIcon,
   Trash2, Plus, Newspaper, Calendar, TrendingUp, Edit2, X, Wand2
@@ -107,7 +108,7 @@ function CompanyNewsManager() {
   };
 
   const del = async (id: string) => {
-    if (!confirm('Delete this news item?')) return;
+    if (!(await customConfirm('Delete this news item?'))) return;
     await fetch(`${API}/api/company-news/${id}`, { method:'DELETE' });
     setItems(p => p.filter(i => i.id !== id));
   };
@@ -219,7 +220,7 @@ function EventsManager() {
   };
 
   const del = async (id: string) => {
-    if (!confirm('Delete this event?')) return;
+    if (!(await customConfirm('Delete this event?'))) return;
     await fetch(`${API}/api/events/${id}`, { method:'DELETE' });
     setItems(p => p.filter(i => i.id !== id));
   };

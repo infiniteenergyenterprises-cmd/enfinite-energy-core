@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { customConfirm } from '@/components/utils/customConfirm';
 import {
   Save, Loader2, Upload, Link as LinkIcon, Image as ImageIcon,
   Award, Zap, Video, Trash2, Plus, Play, X, Grid3X3, MapPin, Activity, Wand2
@@ -215,7 +216,7 @@ function GalleryManager() {
   };
 
   const deleteItem = async (id: string) => {
-    if (!confirm('Delete this image?')) return;
+    if (!(await customConfirm('Delete this image?'))) return;
     await fetch(`${API}/api/gallery/${id}`, { method: 'DELETE' });
     setItems(prev => prev.filter(i => i.id !== id));
   };
@@ -325,7 +326,7 @@ function VideoManager() {
   };
 
   const del = async (id: string) => {
-    if (!confirm('Delete this video?')) return;
+    if (!(await customConfirm('Delete this video?'))) return;
     await fetch(`${API}/api/videos/${id}`, { method: 'DELETE' });
     setVideos(prev => prev.filter(v => v.id !== id));
   };
@@ -482,7 +483,7 @@ function LocationsManager() {
   };
 
   const del = async (id: string) => {
-    if (!confirm('Delete this location?')) return;
+    if (!(await customConfirm('Delete this location?'))) return;
     await fetch(`${API}/api/locations/${id}`, { method: 'DELETE' });
     setLocs(p => p.filter(l => l.id !== id));
   };

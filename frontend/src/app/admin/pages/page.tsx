@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { customConfirm } from '@/components/utils/customConfirm';
 import {
   Save, Loader2, Upload, Link as LinkIcon, Image as ImageIcon,
   Trash2, Plus, Edit2, Phone, Mail, MapPin, Users, Building2,
-  BarChart3, Globe, Wand2
+  BarChart3, Globe, Wand2, Edit3, Play, CheckCircle, Smartphone
 } from 'lucide-react';
 
 const API       = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
@@ -234,7 +235,7 @@ function TeamManager({ map }: { map:Record<string,any> }) {
     cancel();
   };
 
-  const del = (i:number) => { if (confirm('Remove this team member?')) setMembers(p => p.filter((_,idx)=>idx!==i)); };
+  const del = async (i:number) => { if (await customConfirm('Remove this team member?')) setMembers(p => p.filter((_,idx)=>idx!==i)); };
 
   const saveAll = async () => {
     setSv(true);
@@ -346,7 +347,7 @@ function OfficeManager({ map }: { map:Record<string,any> }) {
     else if (editIdx!==null) setOffices(p=>p.map((o,i)=>i===editIdx?form:o));
     cancel();
   };
-  const del = (i:number) => { if (confirm('Remove this office?')) setOffices(p=>p.filter((_,idx)=>idx!==i)); };
+  const del = async (i:number) => { if (await customConfirm('Remove this office?')) setOffices(p=>p.filter((_,idx)=>idx!==i)); };
 
   const saveAll = async () => {
     setSv(true);
