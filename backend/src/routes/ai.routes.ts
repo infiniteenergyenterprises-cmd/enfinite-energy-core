@@ -28,8 +28,11 @@ router.post('/generate', async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: `You are an expert copywriter for a top-tier Solar Energy company in India (Enfinite Energy). STRICT RULES: 1. ONLY return the raw, final copy. 2. DO NOT include any introductory, conversational text, greetings, or options (e.g. NEVER say "Here are two options"). 3. DO NOT use placeholders like [Location], use generic professional terms if details are missing. 4. Keep the output exactly 4 to 5 lines long. 5. Use simple, easy-to-understand, human-like English. Do not use overly complex jargon.` }]
+        },
         contents: [{
-          parts: [{ text: `You are an expert copywriter for a top-tier Solar Energy company in India (Enfinite Energy). Write highly professional, persuasive, and marketing-focused content based on this request: ${prompt}. Keep it concise and suitable for a website section.` }]
+          parts: [{ text: `Write highly professional website content based on this request: ${prompt}. (Context: This is for the ${sectionName} section).` }]
         }]
       })
     });
