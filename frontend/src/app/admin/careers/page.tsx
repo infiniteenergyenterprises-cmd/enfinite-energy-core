@@ -26,10 +26,24 @@ async function getContent(): Promise<Record<string,any>> {
 }
 
 async function saveContent(key: string, name: string, title: string, desc: string, img: string) {
-  await fetch(`${API}/api/content`, {
-    method:'PUT', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ tabGroup:'Careers', sectionKey:key, sectionName:name, title, description:desc, imageUrl:img }),
-  });
+  try {
+    const res = await fetch(`${API}/api/content`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tabGroup: 'Careers', sectionKey: key, sectionName: name, title, description: desc, imageUrl: img }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert('Error saving: ' + (err.message || 'Server error'));
+      throw new Error('Save failed');
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('content-updated'));
+      try { new BroadcastChannel('enfinite-content-sync').postMessage({ type: 'INVALIDATE_CONTENT' }); } catch(e) {}
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 /* ─── shared ─────────────────────────────────────────────── */

@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { HeroSection } from "@/components/sections/HeroSection";
 import { StatsBar } from "@/components/sections/StatsBar";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
@@ -57,3 +60,4 @@ export default async function Home() {
     </PageContentProvider>
   );
 }
+

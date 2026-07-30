@@ -100,13 +100,13 @@ export default function SolutionsPage() {
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => { document.body.style.overflow = 'unset'; }
   }, [selectedApp, selectedProject]);
 
   const projects = [
     { key: 'PROJ_5KW', fallback: { tag: "RESIDENTIAL", title: "5kW On-Grid System", loc: "Lucknow, Uttar Pradesh", cap: "5 kW", save: "₹62,000", img: "https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=800&q=80", desc: "A beautifully integrated residential solar system providing clean energy to a 4-bedroom villa. The system features premium monocrystalline panels and a smart inverter with mobile monitoring.", highlight: "Reduced monthly electricity bill by 92%" } },
     { key: 'PROJ_100KW', fallback: { tag: "COMMERCIAL", title: "100kW Rooftop System", loc: "Indore, Madhya Pradesh", cap: "100 kW", save: "₹12,50,000", img: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80", desc: "Commercial rooftop installation for a manufacturing unit. The system is designed to handle heavy day-time loads, significantly reducing the dependency on grid power and expensive diesel generators.", highlight: "ROI achieved in just 3.5 years" } },
     { key: 'PROJ_500KW', fallback: { tag: "INDUSTRIAL", title: "500kW Industrial Plant", loc: "Pune, Maharashtra", cap: "500 kW", save: "₹65,00,000", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", desc: "A massive industrial solar power plant setup on factory roofs. Engineered with heavy-duty mounting structures to withstand high wind speeds and harsh industrial environments.", highlight: "Offsetting 600 tons of CO2 annually" } },
+    { key: 'PROJ_5MW', fallback: { tag: "COMMERCIAL", title: "5MW Solar Plant", loc: "Bhiwadi, Rajasthan", cap: "5 MW", save: "₹4.5 Cr", img: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&q=80", desc: "A massive commercial solar installation powering a leading manufacturing facility. Equipped with advanced grid-synchronization.", highlight: "Highest ROI in the commercial sector" } },
     { key: 'PROJ_10HP', fallback: { tag: "AGRICULTURE", title: "10HP Solar Water Pump", loc: "Nagaur, Rajasthan", cap: "10 HP", save: "1,20,000 Ltrs", img: "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800&q=80", desc: "An off-grid solar water pumping system empowering local farmers with reliable daytime irrigation. Features a high-efficiency submersible pump and automated controller.", highlight: "Zero diesel costs for irrigation" } }
   ];
 
@@ -122,14 +122,14 @@ export default function SolutionsPage() {
     <div className="bg-white min-h-screen text-[#0A192F]">
       {/* 1. Hero Banner */}
       <section className="relative pt-32 pb-32 px-4 sm:px-4 lg:px-6 bg-[#0A192F] text-white overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-top" style={{ backgroundImage: 'url("/images/16.png")' }}></div>
+        <div className="absolute inset-0 bg-cover bg-top" style={{ backgroundImage: `url("${hero.imageUrl || hero.img}")` }}></div>
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative z-10 max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
-            Our Solar Solutions
+            {hero.title}
           </h1>
           <p className="text-lg text-gray-100 max-w-2xl leading-relaxed font-medium">
-            Comprehensive solar solutions for homes, businesses, industries and agriculture. Customized, efficient and future-ready.
+            {hero.description || hero.desc}
           </p>
         </div>
       </section>
@@ -152,13 +152,13 @@ export default function SolutionsPage() {
       {/* 3. How Our Solutions Work */}
       <section className="py-12 px-4 sm:px-4 lg:px-6 max-w-7xl mx-auto text-center">
         <div className="text-amber-500 font-bold text-sm uppercase tracking-wider mb-2">OUR SOLAR SYSTEMS & FUNCTIONS</div>
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#0A192F]">How Our Solutions Work</h2>
-        <p className="text-gray-500 max-w-2xl mx-auto mb-8">Smartly designed systems with advanced functions to deliver maximum efficiency and long-term savings.</p>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#0A192F]">{howItWorks.title}</h2>
+        <p className="text-gray-500 max-w-2xl mx-auto mb-8">{howItWorks.description || howItWorks.desc}</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Diagram */}
           <div className="relative">
-             <img src="/images/15.png" alt="Solar Working Diagram" className="w-full rounded-2xl shadow-lg" />
+             <img src={howItWorks.imageUrl || howItWorks.img} alt="Solar Working Diagram" className="w-full rounded-2xl shadow-lg" />
           </div>
           
           {/* Right Content */}
@@ -464,3 +464,4 @@ export default function SolutionsPage() {
     </div>
   );
 }
+

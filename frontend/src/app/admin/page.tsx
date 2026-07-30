@@ -235,7 +235,7 @@ export default function AdminDashboard() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            {href:'/admin/sections',icon:<LayoutPanelTop className="w-5 h-5"/>,label:'Content Manager',desc:'Edit images & text',  from:'#3b82f6',to:'#1d4ed8'},
+            {href:'/admin/pages',icon:<LayoutPanelTop className="w-5 h-5"/>,label:'Content Manager',desc:'Edit images & text',  from:'#3b82f6',to:'#1d4ed8'},
             {href:'/admin/leads',   icon:<TrendingUp className="w-5 h-5"/>,    label:'Lead Management',desc:'View submissions',     from:'#f59e0b',to:'#d97706'},
             {href:'/admin/visitors',icon:<Eye className="w-5 h-5"/>,           label:'Visitor Logs',  desc:'Track traffic',        from:'#a855f7',to:'#7c3aed'},
             {href:'/',              icon:<Globe className="w-5 h-5"/>,          label:'View Live Site', desc:'Open website',        from:'#10b981',to:'#059669',target:'_blank'},
