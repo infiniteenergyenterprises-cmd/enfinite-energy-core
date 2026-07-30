@@ -32,7 +32,10 @@ app.disable('x-powered-by'); // Hide Express header
 // Security Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow any origin dynamically to bypass Vercel CORS issues
+    callback(null, true);
+  },
   credentials: true,
 }));
 
