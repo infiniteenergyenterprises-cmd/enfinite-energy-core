@@ -66,10 +66,29 @@ export function GridSectionManager({ title, description, headerKey, items }: Pro
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: formData });
       const data = await res.json();
       if (data.status === 'success') {
+        const newUrl = data.data.url;
         setGridData(prev => ({
           ...prev,
-          [key]: { ...prev[key], url: data.data.url }
+          [key]: { ...prev[key], url: newUrl }
         }));
+        
+        // Auto-save this specific grid item image to database immediately
+        const item = items.find(i => i.key === key);
+        if (item) {
+          await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tabGroup: 'Home',
+              sectionKey: key,
+              sectionName: item.defaultTitle,
+              imageUrl: newUrl
+              // We do not overwrite title/description here, backend upsert will keep existing if undefined passed, wait, if we pass undefined, backend keeps it! Wait, backend update says:
+              // title: (title !== undefined && title !== '') ? title : undefined.
+              // Actually, if we omit it, req.body.title is undefined.
+            })
+          });
+        }
       }
     } catch (error) {
       alert('Error uploading image.');

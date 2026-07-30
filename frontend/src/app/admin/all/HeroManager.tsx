@@ -80,6 +80,19 @@ export function HeroManager() {
           newSlides[index] = { ...newSlides[index], url: newUrl };
           return newSlides;
         });
+
+        // Auto-save this specific slide to database immediately
+        await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tabGroup: 'Home',
+            sectionKey: slides[index].key,
+            sectionName: `Hero Image ${slides[index].key.split('_').pop()}`,
+            imageUrl: newUrl
+          })
+        });
+
       } else {
         alert('Image upload failed.');
       }
