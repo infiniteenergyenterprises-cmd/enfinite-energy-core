@@ -100,20 +100,16 @@ export function HeroSection() {
     description: 'Empowering homes, businesses, and agriculture with MNRE-approved, high-efficiency solar systems. Join the clean energy revolution.'
   });
 
-  const slide1 = usePageContent('HOME_HERO_1', {
-    imageUrl: '/hero-bg.png',
-  });
-  const slide2 = usePageContent('HOME_HERO_2', {
-    imageUrl: 'https://images.unsplash.com/photo-1509391366360-1e97f52ce23b?w=1600&q=80',
-  });
-  const slide3 = usePageContent('HOME_HERO_3', {
-    imageUrl: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=1600&q=80',
-  });
-  const slide4 = usePageContent('HOME_HERO_4', {
-    imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
-  });
+  const slide1 = usePageContent('HOME_HERO_1', { imageUrl: '/hero-bg.png' });
+  const slide2 = usePageContent('HOME_HERO_2', { imageUrl: 'https://images.unsplash.com/photo-1509391366360-1e97f52ce23b?w=1600&q=80' });
+  const slide3 = usePageContent('HOME_HERO_3', { imageUrl: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=1600&q=80' });
+  const slide4 = usePageContent('HOME_HERO_4', { imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80' });
+  const slide5 = usePageContent('HOME_HERO_5', { imageUrl: '' });
+  const slide6 = usePageContent('HOME_HERO_6', { imageUrl: '' });
+  const slide7 = usePageContent('HOME_HERO_7', { imageUrl: '' });
 
-  const slides = [slide1, slide2, slide3, slide4];
+  // Filter out slides that don't have an image set to avoid blank screens
+  const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7].filter(s => s.imageUrl && s.imageUrl.trim() !== '');
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning) return;

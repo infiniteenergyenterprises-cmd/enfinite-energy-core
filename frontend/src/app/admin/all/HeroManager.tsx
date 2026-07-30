@@ -16,6 +16,9 @@ export function HeroManager() {
     { key: 'HOME_HERO_2', url: '' },
     { key: 'HOME_HERO_3', url: '' },
     { key: 'HOME_HERO_4', url: '' },
+    { key: 'HOME_HERO_5', url: '' },
+    { key: 'HOME_HERO_6', url: '' },
+    { key: 'HOME_HERO_7', url: '' },
   ]);
 
   // State for text content
@@ -168,7 +171,7 @@ export function HeroManager() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
         <div>
           <h2 className="text-xl font-black text-white">Hero Section</h2>
-          <p className="text-xs text-white/50 mt-1">Manage 4 background slides, main heading, and description.</p>
+          <p className="text-xs text-white/50 mt-1">Manage 7 background slides, main heading, and description.</p>
         </div>
         <button 
           onClick={handleSave} 
@@ -182,7 +185,7 @@ export function HeroManager() {
 
       {/* 4 Image Boxes */}
       <div>
-        <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2"><ImageIcon className="w-4 h-4 text-amber-400"/> Background Slides (Max 4)</h3>
+        <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2"><ImageIcon className="w-4 h-4 text-amber-400"/> Background Slides (Max 7)</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {slides.map((slide, idx) => (
             <div key={slide.key} className="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col gap-3 group hover:border-amber-400/30 transition-colors">
