@@ -12,10 +12,10 @@ const transporter = nodemailer.createTransport({
 
 export interface LeadData {
   name: string;
-  email?: string;
-  phone?: string;
-  message?: string;
-  type?: string;
+  email?: string | null;
+  phone?: string | null;
+  message?: string | null;
+  type?: string | null;
 }
 
 // ── Type labels & colors ──────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-import admin from 'firebase-admin';
+const admin = require('firebase-admin');
 import dotenv from 'dotenv';
 
 dotenv.config();
