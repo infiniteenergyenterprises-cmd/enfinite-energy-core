@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { LayoutDashboard, Image as ImageIcon, Users, Settings, LogOut, ChevronLeft, TrendingUp, Sun, Video, MapPin, Layers, Award, Newspaper, Briefcase, Globe } from 'lucide-react';
+import { Toaster, toast } from 'react-hot-toast';
 
 const navItems = [
   { href: '/admin',           label: 'Dashboard',        icon: LayoutDashboard },
@@ -56,8 +57,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return originalFetch(...args);
     };
 
+    // Global alert patch to use beautiful toast notifications instead of browser popups
+    const originalAlert = window.alert;
+    window.alert = function (message) {
+      if (typeof message === 'string' && (message.toLowerCase().includes('fail') || message.toLowerCase().includes('error') || message.toLowerCase().includes('required'))) {
+        toast.error(message);
+      } else {
+        toast.success(message);
+      }
+    };
+
     return () => {
       window.fetch = originalFetch;
+      window.alert = originalAlert;
     };
   }, [pathname, router]);
 
@@ -70,6 +82,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex h-screen w-full overflow-hidden" style={{background:'#0a0f1e'}}>
+      <Toaster 
+        position="top-right" 
+        toastOptions={{ 
+          style: { background: '#0F172A', color: '#F1F5F9', border: '1px solid #1E293B', padding: '16px', borderRadius: '12px' },
+          success: { iconTheme: { primary: '#10B981', secondary: '#0F172A' } },
+          error: { iconTheme: { primary: '#EF4444', secondary: '#0F172A' } }
+        }} 
+      />
 
       {/* ── Sidebar ── */}
       <aside className="w-60 bg-[#0B1E3D] flex flex-col shrink-0 hidden md:flex">
