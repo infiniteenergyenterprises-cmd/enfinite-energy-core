@@ -30,8 +30,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (pathname === '/admin/login') return;
-    if (getCookie('admin_auth') !== 'enfinite_admin_ok') router.replace('/admin/login');
-  }, [pathname]);
+    if (getCookie('admin_auth') !== 'enfinite_admin_ok') {
+      router.replace('/admin/login');
+      return;
+    }
+
+    // Global fetch patch for Admin Panel to attach token to all API requests
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+      let [resource, config] = args;
+      const url = typeof resource === 'string' ? resource : (resource instanceof Request ? resource.url : '');
+      
+      if (url.includes('/api/')) {
+        const token = localStorage.getItem('adminToken');
+        if (token) {
+          config = config || {};
+          if (config.headers instanceof Headers) {
+            config.headers.set('Authorization', `Bearer ${token}`);
+          } else {
+            config.headers = { ...config.headers, 'Authorization': `Bearer ${token}` };
+          }
+          args[1] = config;
+        }
+      }
+      return originalFetch(...args);
+    };
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, [pathname, router]);
 
   const handleLogout = () => {
     document.cookie = 'admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
