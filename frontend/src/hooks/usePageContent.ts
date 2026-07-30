@@ -19,7 +19,8 @@ function notifyListeners() {
 }
 
 async function fetchFresh() {
-  fetchPromise = fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content')
+  const ts = Date.now();
+  fetchPromise = fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content?t=' + ts, { cache: 'no-store' })
     .then(r => r.json())
     .then(data => {
       if (data.status === 'success') {
