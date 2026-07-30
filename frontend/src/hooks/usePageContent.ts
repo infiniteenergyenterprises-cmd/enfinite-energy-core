@@ -1,11 +1,13 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 
 export interface PageContentData {
   imageUrl?: string;
   title?: string;
   description?: string;
 }
+
+export const ContentContext = createContext<any>(null);
 
 // ── Global in-memory cache with timestamp ────────────────────────────────────
 let globalCache: Record<string, any> | null = null;
@@ -53,12 +55,26 @@ if (typeof window !== 'undefined') {
 }
 
 export function usePageContent(sectionKey: string, fallback: PageContentData): PageContentData {
-  const [content, setContent] = useState<PageContentData>(fallback);
+  const serverData = useContext(ContentContext);
+  const serverFallback = serverData?.[sectionKey];
+
+  const [content, setContent] = useState<PageContentData>(() => {
+    // If SSR context provided the data, use it synchronously to avoid flash
+    if (serverFallback) {
+      return {
+        imageUrl: serverFallback.imageUrl ?? fallback.imageUrl,
+        title: serverFallback.title ?? fallback.title,
+        description: serverFallback.description ?? fallback.description,
+      };
+    }
+    return fallback;
+  });
 
   useEffect(() => {
     let cancelled = false;
 
     async function load(force = false) {
+      // If we already have serverData, we don't strictly need to fetch immediately, but we can update in background
       await ensureLoaded(force);
       if (cancelled) return;
 
