@@ -92,6 +92,10 @@ export function HeroManager() {
             imageUrl: newUrl
           })
         });
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('content-updated'));
+          try { new BroadcastChannel('enfinite-content-sync').postMessage({ type: 'INVALIDATE_CONTENT' }); } catch(e) {}
+        }
 
       } else {
         alert('Image upload failed.');
@@ -164,6 +168,11 @@ export function HeroManager() {
           description: textContent.description
         })
       });
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('content-updated'));
+        try { new BroadcastChannel('enfinite-content-sync').postMessage({ type: 'INVALIDATE_CONTENT' }); } catch(e) {}
+      }
 
       alert('Hero Section updated successfully!');
     } catch (error) {

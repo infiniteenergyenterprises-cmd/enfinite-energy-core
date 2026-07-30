@@ -122,6 +122,10 @@ export function SavingsCalculatorManager() {
           description: JSON.stringify(rest),
         }),
       });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('content-updated'));
+        try { new BroadcastChannel('enfinite-content-sync').postMessage({ type: 'INVALIDATE_CONTENT' }); } catch(e) {}
+      }
       alert('Savings Calculator updated successfully!');
     } catch { alert('Save failed.'); }
     setSaving(false);

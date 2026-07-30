@@ -89,6 +89,10 @@ export function GenericSectionManager({ title, description, contentKey }: Props)
           description: text.description
         })
       });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('content-updated'));
+        try { new BroadcastChannel('enfinite-content-sync').postMessage({ type: 'INVALIDATE_CONTENT' }); } catch(e) {}
+      }
       alert(`${title} updated successfully!`);
     } catch (error) {
       alert('Failed to save.');
