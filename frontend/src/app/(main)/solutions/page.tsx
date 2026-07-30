@@ -69,6 +69,26 @@ function ProjectCardComp({ projDef, setSelectedProject }: any) {
   );
 }
 
+function SolutionPageCardComp({ cardDef }: { cardDef: any }) {
+  const content = usePageContent(cardDef.key, cardDef.fallback);
+  const Icon = cardDef.icon;
+  return (
+    <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group w-[290px] md:w-auto shrink-0 snap-start">
+      <div className="h-40 overflow-hidden relative">
+        <img src={content.imageUrl || cardDef.fallback.imageUrl} alt={content.title || cardDef.fallback.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+      </div>
+      <div className="p-6 pt-8 flex-1 flex flex-col relative">
+        <div className="absolute -top-5 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
+          <Icon className="w-5 h-5 text-[#0A192F]" />
+        </div>
+        <h3 className="font-bold text-lg mb-2">{content.title || cardDef.fallback.title}</h3>
+        <p className="text-gray-500 text-sm mb-4 flex-1 leading-relaxed">{content.description || cardDef.fallback.description}</p>
+        <Link href={cardDef.slug} className="text-amber-500 font-semibold text-sm flex items-center gap-1 group-hover:text-amber-600">View Solutions <ArrowRight className="w-4 h-4" /></Link>
+      </div>
+    </div>
+  );
+}
+
 export default function SolutionsPage() {
   const { openModal } = useLeadModal();
   const [selectedApp, setSelectedApp] = useState<{img: string, title: string, desc: string, features: string[]} | null>(null);
@@ -117,76 +137,15 @@ export default function SolutionsPage() {
       {/* 2. Solution Cards */}
       <section className="relative z-20 max-w-7xl mx-auto px-4 sm:px-4 lg:px-6 -mt-8">
         <div className="flex overflow-x-auto snap-x snap-mandatory pb-6 gap-6 md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-x-visible md:pb-0 scrollbar-hide">
-          {/* Card 1 */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group w-[290px] md:w-auto shrink-0 snap-start">
-            <div className="h-40 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=500&q=80" alt="Residential" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <div className="p-6 pt-8 flex-1 flex flex-col relative">
-              <div className="absolute -top-5 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-                <Home className="w-5 h-5 text-[#0A192F]" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Residential Solar</h3>
-              <p className="text-gray-500 text-sm mb-4 flex-1 leading-relaxed">Power your home and reduce electricity bills with rooftop solar.</p>
-              <Link href="/solutions/residential" className="text-amber-500 font-semibold text-sm flex items-center gap-1 group-hover:text-amber-600">View Solutions <ArrowRight className="w-4 h-4" /></Link>
-            </div>
-          </div>
-          {/* Card 2 */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group w-[290px] md:w-auto shrink-0 snap-start">
-            <div className="h-40 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" alt="Commercial" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <div className="p-6 pt-8 flex-1 flex flex-col relative">
-              <div className="absolute -top-5 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-                <Settings className="w-5 h-5 text-[#0A192F]" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Commercial Solar</h3>
-              <p className="text-gray-500 text-sm mb-4 flex-1 leading-relaxed">Smart energy solutions for offices, shops and commercial spaces.</p>
-              <Link href="/solutions/commercial" className="text-amber-500 font-semibold text-sm flex items-center gap-1 group-hover:text-amber-600">View Solutions <ArrowRight className="w-4 h-4" /></Link>
-            </div>
-          </div>
-          {/* Card 3 */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group w-[290px] md:w-auto shrink-0 snap-start">
-            <div className="h-40 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80" alt="Industrial" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <div className="p-6 pt-8 flex-1 flex flex-col relative">
-              <div className="absolute -top-5 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-                <Settings className="w-5 h-5 text-[#0A192F]" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Industrial Solar</h3>
-              <p className="text-gray-500 text-sm mb-4 flex-1 leading-relaxed">High-capacity systems for factories and large-scale operations.</p>
-              <Link href="/solutions/industrial" className="text-amber-500 font-semibold text-sm flex items-center gap-1 group-hover:text-amber-600">View Solutions <ArrowRight className="w-4 h-4" /></Link>
-            </div>
-          </div>
-          {/* Card 4 */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group w-[290px] md:w-auto shrink-0 snap-start">
-            <div className="h-40 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=500&q=80" alt="Agriculture" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <div className="p-6 pt-8 flex-1 flex flex-col relative">
-              <div className="absolute -top-5 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-                <Sun className="w-5 h-5 text-[#0A192F]" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Agriculture Solar</h3>
-              <p className="text-gray-500 text-sm mb-4 flex-1 leading-relaxed">Solar water pumps and irrigation solutions for Indian farmers.</p>
-              <Link href="/solutions/agriculture" className="text-amber-500 font-semibold text-sm flex items-center gap-1 group-hover:text-amber-600">View Solutions <ArrowRight className="w-4 h-4" /></Link>
-            </div>
-          </div>
-          {/* Card 5 */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden flex flex-col group w-[290px] md:w-auto shrink-0 snap-start">
-            <div className="h-40 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=500&q=80" alt="EV Charging" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            </div>
-            <div className="p-6 pt-8 flex-1 flex flex-col relative">
-              <div className="absolute -top-5 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
-                <Zap className="w-5 h-5 text-[#0A192F]" />
-              </div>
-              <h3 className="font-bold text-lg mb-2">EV Charging</h3>
-              <p className="text-gray-500 text-sm mb-4 flex-1 leading-relaxed">Sustainable EV charging solutions for a green and clean future.</p>
-              <Link href="/solutions/ev-charging" className="text-amber-500 font-semibold text-sm flex items-center gap-1 group-hover:text-amber-600">View Solutions <ArrowRight className="w-4 h-4" /></Link>
-            </div>
-          </div>
+          {[
+            { key: 'SOLPAGE_CARD_RESIDENTIAL', icon: Home, slug: '/solutions/residential', fallback: { title: 'Residential Solar', description: 'Power your home and reduce electricity bills with rooftop solar.', imageUrl: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=500&q=80' } },
+            { key: 'SOLPAGE_CARD_COMMERCIAL', icon: Settings, slug: '/solutions/commercial', fallback: { title: 'Commercial Solar', description: 'Smart energy solutions for offices, shops and commercial spaces.', imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80' } },
+            { key: 'SOLPAGE_CARD_INDUSTRIAL', icon: Settings, slug: '/solutions/industrial', fallback: { title: 'Industrial Solar', description: 'High-capacity systems for factories and large-scale operations.', imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80' } },
+            { key: 'SOLPAGE_CARD_AGRICULTURE', icon: Sun, slug: '/solutions/agriculture', fallback: { title: 'Agriculture Solar', description: 'Solar water pumps and irrigation solutions for Indian farmers.', imageUrl: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=500&q=80' } },
+            { key: 'SOLPAGE_CARD_EV', icon: Zap, slug: '/solutions/ev-charging', fallback: { title: 'EV Charging', description: 'Sustainable EV charging solutions for a green and clean future.', imageUrl: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=500&q=80' } }
+          ].map(card => (
+            <SolutionPageCardComp key={card.key} cardDef={card} />
+          ))}
         </div>
       </section>
 

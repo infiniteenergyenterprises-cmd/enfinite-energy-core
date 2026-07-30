@@ -444,11 +444,11 @@ export default function SolutionsAdminPage() {
       <Panel title="2. Solution Cards (5 cards)" icon={<Home className="w-4 h-4" />}>
         <div className="space-y-4">
           {[
-            { key: 'SOL_CARD_RESIDENTIAL', title: 'Residential Solar',  desc: 'Power your home and reduce electricity bills with rooftop solar.' },
-            { key: 'SOL_CARD_COMMERCIAL',  title: 'Commercial Solar',   desc: 'Smart energy solutions for offices, shops and commercial spaces.' },
-            { key: 'SOL_CARD_INDUSTRIAL',  title: 'Industrial Solar',   desc: 'High-capacity systems for factories and large-scale operations.' },
-            { key: 'SOL_CARD_AGRICULTURE', title: 'Agriculture Solar',  desc: 'Solar water pumps and irrigation solutions for Indian farmers.' },
-            { key: 'SOL_CARD_EV',          title: 'EV Charging',        desc: 'Sustainable EV charging solutions for a green and clean future.' },
+            { key: 'SOLPAGE_CARD_RESIDENTIAL', title: 'Residential Solar',  desc: 'Power your home and reduce electricity bills with rooftop solar.' },
+            { key: 'SOLPAGE_CARD_COMMERCIAL',  title: 'Commercial Solar',   desc: 'Smart energy solutions for offices, shops and commercial spaces.' },
+            { key: 'SOLPAGE_CARD_INDUSTRIAL',  title: 'Industrial Solar',   desc: 'High-capacity systems for factories and large-scale operations.' },
+            { key: 'SOLPAGE_CARD_AGRICULTURE', title: 'Agriculture Solar',  desc: 'Solar water pumps and irrigation solutions for Indian farmers.' },
+            { key: 'SOLPAGE_CARD_EV',          title: 'EV Charging',        desc: 'Sustainable EV charging solutions for a green and clean future.' },
           ].map(c => (
             <SolutionCard key={c.key} map={map} cardKey={c.key} defaultTitle={c.title} defaultDesc={c.desc} />
           ))}
