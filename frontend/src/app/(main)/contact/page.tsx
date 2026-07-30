@@ -30,7 +30,7 @@ export default function ContactPage() {
   const [heroDesc,   setHeroDesc]   = React.useState('Have a question? Want a free site survey? Our solar experts are ready to help you switch to clean energy.');
 
   React.useEffect(() => {
-    fetch('http://localhost:5000/api/content')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content')
       .then(r => r.json())
       .then(d => {
         const map = d.map || {};
@@ -139,7 +139,7 @@ export default function ContactPage() {
     setConsultError('');
     setConsultLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/leads', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -185,7 +185,7 @@ export default function ContactPage() {
     const email = window.prompt("Please enter your Email (Optional):") || '';
 
     try {
-      const res = await fetch('http://localhost:5000/api/leads', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -6,12 +6,12 @@ import {
   Trash2, Plus, Briefcase, Edit2, ToggleLeft, ToggleRight, X, Wand2
 } from 'lucide-react';
 
-const API       = 'http://localhost:5000';
+const API       = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 
 async function uploadImg(file: File): Promise<string> {
   const form = new FormData();
   form.append('image', file);
-  const res  = await fetch(`http://localhost:5000/api/upload`, { method:'POST', body:form });
+  const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method:'POST', body:form });
   const json = await res.json();
   if (json.status !== 'success') throw new Error('Upload failed');
   return json.data.url;
@@ -106,7 +106,7 @@ function HeroManager({ map }: { map:Record<string,any> }) {
         <button onClick={async () => {
             const btn = document.getElementById('ai-career-hero-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the Careers page of a solar energy company.`, sectionName: "Careers Hero" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the Careers page of a solar energy company.`, sectionName: "Careers Hero" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -223,7 +223,7 @@ function JobsManager() {
           <button onClick={async () => {
             const btn = document.getElementById('ai-job-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short job description for a ${form.title || 'Untitled'} in the ${form.department} department at ${form.location}.`, sectionName: "Job Description" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short job description for a ${form.title || 'Untitled'} in the ${form.department} department at ${form.location}.`, sectionName: "Job Description" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setForm(p => ({...p, description: data.data.text}));
               else alert('AI Generation failed.');

@@ -6,12 +6,12 @@ import {
   Trash2, Plus, Newspaper, Calendar, TrendingUp, Edit2, X, Wand2
 } from 'lucide-react';
 
-const API       = 'http://localhost:5000';
+const API       = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 
 async function uploadImg(file: File): Promise<string> {
   const form = new FormData();
   form.append('image', file);
-  const res  = await fetch(`http://localhost:5000/api/upload`, { method: 'POST', body: form });
+  const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: form });
   const json = await res.json();
   if (json.status !== 'success') throw new Error('Upload failed');
   return json.data.url;
@@ -144,7 +144,7 @@ function CompanyNewsManager() {
           <button onClick={async () => {
             const btn = document.getElementById('ai-news-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short summary for a news item titled: ${form.title || 'Untitled'}. Category: ${form.category}`, sectionName: "News Item" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short summary for a news item titled: ${form.title || 'Untitled'}. Category: ${form.category}`, sectionName: "News Item" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setForm(p => ({...p, summary: data.data.text}));
               else alert('AI Generation failed.');
@@ -262,7 +262,7 @@ function EventsManager() {
           <button onClick={async () => {
             const btn = document.getElementById('ai-event-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for an upcoming event titled: ${form.title || 'Untitled'} at ${form.location || 'Unknown location'}.`, sectionName: "Event Item" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for an upcoming event titled: ${form.title || 'Untitled'} at ${form.location || 'Unknown location'}.`, sectionName: "Event Item" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setForm(p => ({...p, desc: data.data.text}));
               else alert('AI Generation failed.');
@@ -357,7 +357,7 @@ function NewsHeroManager({ map }: { map: Record<string,any> }) {
         <button onClick={async () => {
             const btn = document.getElementById('ai-hero-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the News & Events page of a solar energy company.`, sectionName: "News Hero" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the News & Events page of a solar energy company.`, sectionName: "News Hero" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');

@@ -29,7 +29,7 @@ export function GridSectionManager({ title, description, headerKey, items }: Pro
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/content');
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content');
         if (res.ok) {
           const { map } = await res.json();
           
@@ -63,7 +63,7 @@ export function GridSectionManager({ title, description, headerKey, items }: Pro
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await fetch(`http://localhost:5000/api/upload`, { method: 'POST', body: formData });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: formData });
       const data = await res.json();
       if (data.status === 'success') {
         setGridData(prev => ({
@@ -84,7 +84,7 @@ export function GridSectionManager({ title, description, headerKey, items }: Pro
         ? `Generate a catchy heading and short description for the ${title} section of a solar energy website.`
         : `Write a 1-sentence marketing description (max 150 chars) about "${itemName}" for a solar company's features.`;
         
-      const res = await fetch('http://localhost:5000/api/ai/generate', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, sectionName: title })
@@ -109,7 +109,7 @@ export function GridSectionManager({ title, description, headerKey, items }: Pro
     setSaving(true);
     try {
       if (headerKey) {
-        await fetch('http://localhost:5000/api/content', {
+        await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -124,7 +124,7 @@ export function GridSectionManager({ title, description, headerKey, items }: Pro
 
       for (const item of items) {
         const d = gridData[item.key];
-        await fetch('http://localhost:5000/api/content', {
+        await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

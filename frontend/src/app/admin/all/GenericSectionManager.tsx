@@ -22,7 +22,7 @@ export function GenericSectionManager({ title, description, contentKey }: Props)
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/content');
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content');
         if (res.ok) {
           const { map } = await res.json();
           if (map[contentKey]) {
@@ -46,7 +46,7 @@ export function GenericSectionManager({ title, description, contentKey }: Props)
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await fetch(`http://localhost:5000/api/upload`, { method: 'POST', body: formData });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: formData });
       const data = await res.json();
       if (data.status === 'success') setImageUrl(data.data.url);
     } catch (error) {
@@ -58,7 +58,7 @@ export function GenericSectionManager({ title, description, contentKey }: Props)
   const handleAIGenerate = async () => {
     setGenerating(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/generate', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +77,7 @@ export function GenericSectionManager({ title, description, contentKey }: Props)
   const handleSave = async () => {
     setSaving(true);
     try {
-      await fetch('http://localhost:5000/api/content', {
+      await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -6,13 +6,13 @@ import {
   Award, Zap, Video, Trash2, Plus, Play, X, Grid3X3, MapPin, Activity, Wand2
 } from 'lucide-react';
 
-const API       = 'http://localhost:5000';
+const API       = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 
 /* ─── upload helper ─────────────────────────────────────── */
 async function uploadToImgbb(file: File): Promise<string> {
   const form = new FormData();
   form.append('image', file);
-  const res  = await fetch(`http://localhost:5000/api/upload`, { method: 'POST', body: form });
+  const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: form });
   const json = await res.json();
   if (json.status !== 'success') throw new Error('Upload failed');
   return json.data.url;
@@ -100,7 +100,7 @@ function HeroSection({ map }: { map: Record<string, any> }) {
   const aiGen = async () => {
     setGen(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: "Generate a catchy hero title and a short description for an 'Our Work' portfolio section of a solar company.", sectionName: "Our Work Hero" }) });
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: "Generate a catchy hero title and a short description for an 'Our Work' portfolio section of a solar company.", sectionName: "Our Work Hero" }) });
       const data = await res.json();
       if (data.status === 'success' && data.data.text) setDesc(data.data.text);
       else alert('AI Generation failed.');
@@ -138,7 +138,7 @@ function ProjectCard({ map, projKey, defaultTitle, defaultDesc, tag }: { map: Re
   const aiGen = async () => {
     setGen(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a short description for a ${tag} solar project titled ${defaultTitle}.`, sectionName: "Project Card" }) });
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a short description for a ${tag} solar project titled ${defaultTitle}.`, sectionName: "Project Card" }) });
       const data = await res.json();
       if (data.status === 'success' && data.data.text) setDesc(data.data.text);
       else alert('AI Generation failed.');
@@ -397,7 +397,7 @@ function VideoManager() {
         <button onClick={async () => {
             const btn = document.getElementById('ai-video-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy video titled: ${form.title || 'Untitled'}. Category: ${form.category}`, sectionName: "Video Item" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy video titled: ${form.title || 'Untitled'}. Category: ${form.category}`, sectionName: "Video Item" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setForm(p => ({...p, description: data.data.text}));
               else alert('AI Generation failed.');

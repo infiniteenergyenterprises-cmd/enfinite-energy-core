@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { ArrowRight, CheckCircle2, Home, Building2, Zap, Shield, Wrench, X } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API = process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 const CONTENT_KEY = 'HOME_SAVINGS_CALCULATOR';
 
 interface CalcContent {

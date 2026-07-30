@@ -25,7 +25,7 @@ export function EventCard({ day, month, year, title, location, desc, image, time
     if (!name || !phone) return alert('Name and Mobile Number are required.');
     setSubmitting(true);
     try {
-      const res = await fetch('http://localhost:5000/api/leads', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

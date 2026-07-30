@@ -6,13 +6,13 @@ import {
   Home, Settings, Sun, Zap, ChevronDown, ChevronUp, Check, Wand2
 } from 'lucide-react';
 
-const API        = 'http://localhost:5000';
+const API        = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 
 /* ─── helpers ─────────────────────────────────────────────── */
 async function uploadToImgbb(file: File): Promise<string> {
   const form = new FormData();
   form.append('image', file);
-  const res  = await fetch(`http://localhost:5000/api/upload`, { method: 'POST', body: form });
+  const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: form });
   const json = await res.json();
   if (json.status !== 'success') throw new Error('Upload failed');
   return json.data.url;
@@ -135,7 +135,7 @@ function HeroBanner({ map }: { map: Record<string, any> }) {
         <button onClick={async () => {
             const btn = document.getElementById('ai-sol-hero-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the Solutions page of a solar energy company.`, sectionName: "Solutions Hero" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the Solutions page of a solar energy company.`, sectionName: "Solutions Hero" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -171,7 +171,7 @@ function SolutionCard({ map, cardKey, defaultTitle, defaultDesc }: { map: Record
         <button onClick={async () => {
             const btn = document.getElementById(`ai-sol-card-${cardKey}`) as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy solution card titled: ${title}.`, sectionName: "Solution Card" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy solution card titled: ${title}.`, sectionName: "Solution Card" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -207,7 +207,7 @@ function AppCard({ map, appKey, defaultTitle, defaultDesc }: { map: Record<strin
         <button onClick={async () => {
             const btn = document.getElementById(`ai-app-card-${appKey}`) as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy application card titled: ${title}.`, sectionName: "App Card" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy application card titled: ${title}.`, sectionName: "App Card" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -243,7 +243,7 @@ function ProjectCard({ map, projKey, defaultTitle, defaultDesc }: { map: Record<
         <button onClick={async () => {
             const btn = document.getElementById(`ai-proj-card-${projKey}`) as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy project card titled: ${title}.`, sectionName: "Project Card" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for a solar energy project card titled: ${title}.`, sectionName: "Project Card" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -279,7 +279,7 @@ function HowItWorks({ map }: { map: Record<string, any> }) {
         <button onClick={async () => {
             const btn = document.getElementById('ai-howitworks-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for the 'How Our Solutions Work' section for a solar company. Title: ${title}`, sectionName: "How It Works" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short description for the 'How Our Solutions Work' section for a solar company. Title: ${title}`, sectionName: "How It Works" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -394,7 +394,7 @@ function SolutionDetailEditor({ slug, label, map }: { slug: string; label: strin
         <button onClick={async () => {
             const btn = document.getElementById(`ai-soldet-btn-${slug}`) as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a detailed description for a specific solar solution page. Solution type: ${slug}. Title: ${title}`, sectionName: "Solution Detail" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a detailed description for a specific solar solution page. Solution type: ${slug}. Title: ${title}`, sectionName: "Solution Detail" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');

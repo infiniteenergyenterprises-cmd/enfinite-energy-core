@@ -20,7 +20,7 @@ function HeroCalculatorCard() {
     if (!bill) return;
     setSubmitting(true);
     try {
-      await fetch('http://localhost:5000/api/leads', {
+      await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

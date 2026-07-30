@@ -44,10 +44,10 @@ export default function NewsAndEventsPage() {
     async function fetchAll() {
       try {
         const [liveRes, cnRes, evtRes, cmsRes] = await Promise.allSettled([
-          fetch('http://localhost:5000/api/news/live').then(r => r.json()),
-          fetch('http://localhost:5000/api/company-news').then(r => r.json()),
-          fetch('http://localhost:5000/api/events').then(r => r.json()),
-          fetch('http://localhost:5000/api/content').then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/news/live').then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/company-news').then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/events').then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content').then(r => r.json()),
         ]);
         if (liveRes.status === 'fulfilled' && liveRes.value.success) setLiveNews(liveRes.value.news);
         if (cnRes.status === 'fulfilled' && cnRes.value.status === 'success' && cnRes.value.data.length > 0) setCompanyNews(cnRes.value.data);
@@ -92,7 +92,7 @@ export default function NewsAndEventsPage() {
     if (!newsletterEmail) return alert('Please enter a valid email address.');
     setSubmittingNewsletter(true);
     try {
-      const res = await fetch('http://localhost:5000/api/leads', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -123,7 +123,7 @@ export default function NewsAndEventsPage() {
     if (!ctaName || !ctaPhone) return alert('Please fill in both Name and Mobile Number.');
     setSubmittingCta(true);
     try {
-      const res = await fetch('http://localhost:5000/api/leads', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

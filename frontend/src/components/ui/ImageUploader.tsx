@@ -36,7 +36,7 @@ export function ImageUploader({ onUploadSuccess }: ImageUploaderProps) {
 
     try {
       // Pointing to your backend upload endpoint
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/upload', {
         method: 'POST',
         body: formData,
       });

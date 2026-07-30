@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Loader2, Wand2, Upload, Link as LinkIcon, Image as ImageIcon, Calculator } from 'lucide-react';
 
-const API = 'http://localhost:5000';
+const API = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 
 interface CalcContent {
   heading: string;
@@ -78,7 +78,7 @@ export function SavingsCalculatorManager() {
     const form = new FormData();
     form.append('image', file);
     try {
-      const res  = await fetch(`http://localhost:5000/api/upload`, { method: 'POST', body: form });
+      const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method: 'POST', body: form });
       const json = await res.json();
       if (json.status === 'success') setData(d => ({ ...d, ctaImageUrl: json.data.url }));
     } catch { alert('Upload failed.'); }

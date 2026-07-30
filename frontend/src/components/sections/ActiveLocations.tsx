@@ -27,7 +27,7 @@ export function ActiveLocations() {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/locations')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/locations')
       .then(r => r.json())
       .then(data => {
         if (data.status === 'success' && data.data.length > 0) {

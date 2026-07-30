@@ -29,7 +29,7 @@ export function HeroManager() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/content');
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content');
         if (res.ok) {
           const { map } = await res.json();
           setSlides(slides.map(s => ({
@@ -65,7 +65,7 @@ export function HeroManager() {
     formData.append('image', file);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/upload`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, {
         method: 'POST',
         body: formData
       });
@@ -91,7 +91,7 @@ export function HeroManager() {
   const handleAIGenerate = async () => {
     setGenerating(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/generate', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -123,7 +123,7 @@ export function HeroManager() {
       // Save the 4 slides
       for (const slide of slides) {
         if (slide.url) {
-          await fetch('http://localhost:5000/api/content', {
+          await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -137,7 +137,7 @@ export function HeroManager() {
       }
 
       // Save the text content
-      await fetch('http://localhost:5000/api/content', {
+      await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

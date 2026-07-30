@@ -47,7 +47,7 @@ export function VideoBlog() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/videos')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/videos')
       .then(r => r.json())
       .then(data => {
         if (data.status === 'success' && data.data.length > 0) {

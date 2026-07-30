@@ -91,7 +91,7 @@ export function Chatbot() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/ai/chat", {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + "/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userText, history: currentHistory }),

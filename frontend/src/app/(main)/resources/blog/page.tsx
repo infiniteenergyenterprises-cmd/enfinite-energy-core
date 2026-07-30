@@ -102,7 +102,7 @@ export default function BlogPage() {
     // Don't set loading=true on initial fetch — show local articles immediately
     setError(false);
     try {
-      const res = await fetch('http://localhost:5000/api/rss/solar');
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/rss/solar');
       const data = await res.json();
       if (data.status === 'success') {
         setLiveArticles(data.data || []);

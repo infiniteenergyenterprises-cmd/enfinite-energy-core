@@ -19,7 +19,7 @@ function notifyListeners() {
 }
 
 async function fetchFresh() {
-  fetchPromise = fetch('http://localhost:5000/api/content')
+  fetchPromise = fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content')
     .then(r => r.json())
     .then(data => {
       if (data.status === 'success') {

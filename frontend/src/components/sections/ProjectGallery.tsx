@@ -35,7 +35,7 @@ export function ProjectGallery({ limit }: ProjectGalleryProps) {
   const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/gallery')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/gallery')
       .then(r => r.json())
       .then(data => {
         if (data.status === 'success' && data.data.length > 0) {

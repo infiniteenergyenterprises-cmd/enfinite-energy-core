@@ -7,12 +7,12 @@ import {
   BarChart3, Globe, Wand2
 } from 'lucide-react';
 
-const API       = 'http://localhost:5000';
+const API       = (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 
 async function uploadImg(file: File): Promise<string> {
   const form = new FormData();
   form.append('image', file);
-  const res  = await fetch(`http://localhost:5000/api/upload`, { method:'POST', body:form });
+  const res  = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/upload`, { method:'POST', body:form });
   const json = await res.json();
   if (json.status !== 'success') throw new Error('Upload failed');
   return json.data.url;
@@ -297,7 +297,7 @@ function TeamManager({ map }: { map:Record<string,any> }) {
             <button onClick={async () => {
                 const btn = document.getElementById('ai-team-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
                 try {
-                  const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short professional bio for a team member named ${form.name || 'someone'} who works as a ${form.role || 'professional'} with experience: ${form.exp || 'various experience'}.`, sectionName: "Team Bio" }) });
+                  const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Write a short professional bio for a team member named ${form.name || 'someone'} who works as a ${form.role || 'professional'} with experience: ${form.exp || 'various experience'}.`, sectionName: "Team Bio" }) });
                   const data = await res.json();
                   if (data.status === 'success' && data.data.text) setForm(p => ({...p, bio: data.data.text}));
                   else alert('AI Generation failed.');
@@ -425,7 +425,7 @@ function AboutHeroManager({ map }: { map:Record<string,any> }) {
         <button onClick={async () => {
             const btn = document.getElementById('ai-about-hero-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the About page of a solar energy company.`, sectionName: "About Hero" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the About page of a solar energy company.`, sectionName: "About Hero" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');
@@ -461,7 +461,7 @@ function ContactHeroManager({ map }: { map:Record<string,any> }) {
         <button onClick={async () => {
             const btn = document.getElementById('ai-contact-hero-btn') as HTMLButtonElement; if(btn) btn.disabled = true;
             try {
-              const res = await fetch('http://localhost:5000/api/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the Contact page of a solar energy company.`, sectionName: "Contact Hero" }) });
+              const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/ai/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: `Generate a catchy hero title and a short description for the Contact page of a solar energy company.`, sectionName: "Contact Hero" }) });
               const data = await res.json();
               if (data.status === 'success' && data.data.text) setDesc(data.data.text);
               else alert('AI Generation failed.');

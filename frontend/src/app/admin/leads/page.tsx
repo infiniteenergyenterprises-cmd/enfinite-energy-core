@@ -66,7 +66,7 @@ export default function LeadsPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem('adminToken');
-      const res = await fetch('http://localhost:5000/api/leads', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -87,7 +87,7 @@ export default function LeadsPage() {
     setUpdatingId(id);
     try {
       const token = localStorage.getItem('adminToken');
-      await fetch(`http://localhost:5000/api/leads/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/leads/${id}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ export default function LeadsPage() {
         setUpdatingId(id);
         try {
           const token = localStorage.getItem('adminToken');
-          const res = await fetch(`http://localhost:5000/api/leads/${id}/confirm-email`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/leads/${id}/confirm-email`, {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',

@@ -40,8 +40,8 @@ export default function AdminDashboard() {
       const token = localStorage.getItem('adminToken');
       const headers = token ? { 'Authorization': `Bearer ${token}` } : undefined;
       const[vR,lR]=await Promise.all([
-        fetch('http://localhost:5000/api/visitors/stats', { headers }),
-        fetch('http://localhost:5000/api/leads', { headers }),
+        fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/visitors/stats', { headers }),
+        fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', { headers }),
       ]);
       const vD=await vR.json();const lD=await lR.json();
       if(vD.status==='success')setStats(vD.data);

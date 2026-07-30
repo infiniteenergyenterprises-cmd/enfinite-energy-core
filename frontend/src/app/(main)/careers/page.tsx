@@ -74,13 +74,13 @@ export default function CareersPage() {
   const [submitted, setSubmitted]   = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/careers')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/careers')
       .then(r => r.json())
       .then(d => { if (d.success && d.careers?.length > 0) setJobs(d.careers); })
       .catch(() => {})
       .finally(() => setLoading(false));
     // Fetch hero content from CMS
-    fetch('http://localhost:5000/api/content')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content')
       .then(r => r.json())
       .then(d => {
         const map = d.map || {};
@@ -111,7 +111,7 @@ export default function CareersPage() {
     setSubmitting(true);
     try {
       if (type === 'apply') {
-        await fetch('http://localhost:5000/api/careers/apply', {
+        await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/careers/apply', {
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -123,7 +123,7 @@ export default function CareersPage() {
           })
         });
       }
-      await fetch('http://localhost:5000/api/leads', {
+      await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

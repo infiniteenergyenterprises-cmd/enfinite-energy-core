@@ -6,7 +6,7 @@ export function useSectionImage(sectionKey: string, fallbackUrl: string) {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/sections');
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/sections');
         const data = await res.json();
         if (data.status === 'success' && data.map[sectionKey]) {
           setImageUrl(data.map[sectionKey]);
