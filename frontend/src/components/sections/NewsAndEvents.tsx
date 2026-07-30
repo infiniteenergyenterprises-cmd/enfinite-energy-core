@@ -74,8 +74,8 @@ export function NewsAndEvents() {
     setLoading(true);
     try {
       const [rssRes, cnRes] = await Promise.allSettled([
-        fetch(`${API}/api/rss/solar${force ? '?refresh=1' : ''}`).then(r => r.json()),
-        fetch(`${API}/api/company-news`).then(r => r.json()),
+        fetch(`${API}/api/rss/solar${force ? '?refresh=1&' : '?'}t=${Date.now()}`, { cache: 'no-store' }).then(r => r.json()),
+        fetch(`${API}/api/company-news?t=${Date.now()}`, { cache: 'no-store' }).then(r => r.json()),
       ]);
       if (rssRes.status === 'fulfilled' && rssRes.value.status === 'success' && rssRes.value.data?.length) {
         setArticles(rssRes.value.data);

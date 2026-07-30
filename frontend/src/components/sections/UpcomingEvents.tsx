@@ -29,7 +29,7 @@ export function UpcomingEvents() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API}/api/events`)
+    fetch(`${API}/api/events?t=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         if (data.status === 'success' && data.data?.length > 0) setEvents(data.data.slice(0, 3));
