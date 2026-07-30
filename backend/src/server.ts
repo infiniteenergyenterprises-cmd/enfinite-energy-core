@@ -31,10 +31,19 @@ app.disable('x-powered-by'); // Hide Express header
 
 // Security Middleware
 app.use(helmet());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://frontend-phi-sepia-59.vercel.app',
+  'https://frontend-ek8t4bqsi-manish-4926.vercel.app'
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow any origin dynamically to bypass Vercel CORS issues
-    callback(null, true);
+    if (!origin || allowedOrigins.includes(origin) || (process.env.CORS_ORIGIN && process.env.CORS_ORIGIN === origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   },
   credentials: true,
 }));
