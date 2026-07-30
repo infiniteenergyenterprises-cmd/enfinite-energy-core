@@ -134,24 +134,31 @@ export default function OurWorkPage() {
     filteredProjects = [...filteredProjects].reverse();
   }
 
+  const activeIndexRef = useRef(0);
+  
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
+
   // Auto-scroll logic for the featured projects carousel
   useEffect(() => {
     if (filteredProjects.length <= 1) return;
     const interval = setInterval(() => {
       if (scrollRef.current) {
+        const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll <= 0) return;
+
         const maxIndex = filteredProjects.length - 1;
-        let nextIndex = activeIndex + 1;
+        let nextIndex = activeIndexRef.current + 1;
         if (nextIndex > maxIndex) nextIndex = 0;
         
-        const { scrollWidth, clientWidth } = scrollRef.current;
-        const maxScroll = scrollWidth - clientWidth;
         const targetScroll = maxIndex > 0 ? (nextIndex / maxIndex) * maxScroll : 0;
-        
         scrollRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [filteredProjects, activeIndex]);
+  }, [filteredProjects]);
 
   const handleScroll = () => {
     if (scrollRef.current) {

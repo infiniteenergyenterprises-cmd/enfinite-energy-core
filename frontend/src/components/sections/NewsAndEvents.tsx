@@ -95,21 +95,23 @@ export function NewsAndEvents() {
     return () => clearInterval(timer);
   }, []);
 
-  const filtered = activeTab === 'All'
-    ? articles
-    : activeTab === 'Company'
-      ? [] // company news shown separately
-      : articles.filter(a => a.tag === activeTab);
+  const companyDisplayItems = companyNews.map(c => ({
+    id: c.id, title: c.title, summary: c.summary || '',
+    image: c.image || '/17.png', link: c.link || '/news',
+    time: c.time || '', source: c.source || 'Enfinite Energy',
+    tag: 'Company', category: c.category || 'Company News',
+  }));
 
-  // For company tab, show company news as RssArticle shape
-  const displayItems: RssArticle[] = activeTab === 'Company'
-    ? companyNews.map(c => ({
-        id: c.id, title: c.title, summary: c.summary || '',
-        image: c.image || '/17.png', link: c.link || '/news',
-        time: c.time || '', source: c.source || 'Enfinite Energy',
-        tag: 'Company', category: c.category || 'Company News',
-      }))
-    : filtered;
+  let displayItems: RssArticle[] = [];
+  
+  if (activeTab === 'Company') {
+    displayItems = companyDisplayItems;
+  } else if (activeTab === 'All') {
+    // Show company news first, then RSS news
+    displayItems = [...companyDisplayItems, ...articles];
+  } else {
+    displayItems = articles.filter(a => a.tag === activeTab);
+  }
 
   const scroll = (dir: 'left' | 'right') =>
     scrollRef.current?.scrollBy({ left: dir === 'left' ? -400 : 400, behavior: 'smooth' });
