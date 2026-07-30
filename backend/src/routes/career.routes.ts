@@ -10,7 +10,16 @@ router.get('/', async (req, res) => {
       where: { isActive: true },
       orderBy: { createdAt: 'desc' }
     });
-    res.status(200).json({ success: true, careers });
+    const metas = await prisma.settings.findMany({ where: { key: { startsWith: 'CAREER_META_' } } });
+    const metaMap = new Map();
+    metas.forEach(m => metaMap.set(m.key, JSON.parse(m.value)));
+    
+    const enriched = careers.map(c => ({
+      ...c,
+      experience: metaMap.get(`CAREER_META_${c.id}`)?.experience || '',
+      salary: metaMap.get(`CAREER_META_${c.id}`)?.salary || ''
+    }));
+    res.status(200).json({ success: true, careers: enriched });
   } catch (e: any) {
     res.status(500).json({ success: false, message: e.message });
   }
@@ -20,7 +29,16 @@ router.get('/', async (req, res) => {
 router.get('/all', async (req, res) => {
   try {
     const careers = await prisma.career.findMany({ orderBy: { createdAt: 'desc' } });
-    res.status(200).json({ success: true, careers });
+    const metas = await prisma.settings.findMany({ where: { key: { startsWith: 'CAREER_META_' } } });
+    const metaMap = new Map();
+    metas.forEach(m => metaMap.set(m.key, JSON.parse(m.value)));
+    
+    const enriched = careers.map(c => ({
+      ...c,
+      experience: metaMap.get(`CAREER_META_${c.id}`)?.experience || '',
+      salary: metaMap.get(`CAREER_META_${c.id}`)?.salary || ''
+    }));
+    res.status(200).json({ success: true, careers: enriched });
   } catch (e: any) {
     res.status(500).json({ success: false, message: e.message });
   }
