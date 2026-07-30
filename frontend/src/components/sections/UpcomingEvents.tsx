@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, MapPin, ArrowRight, Clock, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-const API = process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
+const API = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000';
 
 interface Evt {
   id: string;
