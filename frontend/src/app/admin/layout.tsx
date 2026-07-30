@@ -43,16 +43,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const url = typeof resource === 'string' ? resource : (resource instanceof Request ? resource.url : '');
       
       if (url.includes('/api/')) {
+        config = config || {};
+        
+        // Prevent caching in admin panel globally
+        if (!config.method || config.method.toUpperCase() === 'GET') {
+          config.cache = 'no-store';
+          if (typeof resource === 'string') {
+            resource = resource + (resource.includes('?') ? '&' : '?') + 't=' + Date.now();
+            args[0] = resource;
+          }
+        }
+
         const token = localStorage.getItem('adminToken');
         if (token) {
-          config = config || {};
           if (config.headers instanceof Headers) {
             config.headers.set('Authorization', `Bearer ${token}`);
           } else {
             config.headers = { ...config.headers, 'Authorization': `Bearer ${token}` };
           }
-          args[1] = config;
         }
+        args[1] = config;
       }
       return originalFetch(...args);
     };
