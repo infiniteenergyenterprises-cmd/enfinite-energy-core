@@ -44,7 +44,7 @@ router.post('/', protect, authorize('ADMIN'), async (req, res) => {
 // DELETE video blog entry
 router.delete('/:id', protect, authorize('ADMIN'), async (req, res) => {
   try {
-    await prisma.settings.delete({ where: { id: req.params.id } });
+    await prisma.settings.delete({ where: { id: req.params.id as string } });
     res.json({ status: 'success', message: 'Deleted' });
   } catch (e: any) {
     res.status(500).json({ status: 'error', message: e.message });
@@ -56,7 +56,7 @@ router.put('/:id', protect, authorize('ADMIN'), async (req, res) => {
   try {
     const { title, description, duration, thumbnail, category, videoUrl } = req.body;
     const entry = await prisma.settings.update({
-      where: { id: req.params.id },
+      where: { id: req.params.id as string },
       data: {
         value: JSON.stringify({ title, description, duration, thumbnail, category, videoUrl }),
         description: `Video: ${title}`

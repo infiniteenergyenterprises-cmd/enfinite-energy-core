@@ -99,7 +99,7 @@ router.post('/', async (req: Request, res: Response) => {
 // ── POST /api/leads/:id/confirm-email — Send AI Confirmation ─────────────────
 router.post('/:id/confirm-email', protect, authorize('ADMIN'), async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const lead = await prisma.lead.findUnique({ where: { id } });
 
     if (!lead) {
@@ -140,7 +140,7 @@ router.get('/', protect, authorize('ADMIN'), async (_req: Request, res: Response
 // ── PATCH /api/leads/:id — Update lead status ────────────────────────────────
 router.patch('/:id', protect, authorize('ADMIN'), async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { status } = req.body;
 
     const lead = await prisma.lead.update({

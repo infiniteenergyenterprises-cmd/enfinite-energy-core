@@ -7,9 +7,9 @@ const prisma = new PrismaClient();
 // Get all section images
 router.get('/', async (req, res) => {
   try {
-    const sections = await prisma.sectionImage.findMany();
+    const sections = await (prisma as any).pageContent.findMany();
     // Convert to a map for easy frontend usage { [sectionKey]: imageUrl }
-    const sectionMap = sections.reduce((acc, sec) => {
+    const sectionMap = sections.reduce((acc: any, sec: any) => {
       acc[sec.sectionKey] = sec.imageUrl;
       return acc;
     }, {} as Record<string, string>);
@@ -29,13 +29,14 @@ router.put('/', async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Missing sectionKey or imageUrl' });
     }
 
-    const section = await prisma.sectionImage.upsert({
+    const section = await (prisma as any).pageContent.upsert({
       where: { sectionKey },
       update: {
         imageUrl,
         sectionName: sectionName || undefined // only update if provided
       },
       create: {
+        tabGroup: "General",
         sectionKey,
         sectionName: sectionName || sectionKey,
         imageUrl
