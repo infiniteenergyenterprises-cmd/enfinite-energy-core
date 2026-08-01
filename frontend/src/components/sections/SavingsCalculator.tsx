@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/Button';
 import { Sun, Battery, IndianRupee, Leaf, Zap, ArrowRight, ShieldCheck, MapPin, CheckCircle2, ChevronRight, Check, Sparkles, Navigation, Home, Building2, Shield, Wrench, X } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
