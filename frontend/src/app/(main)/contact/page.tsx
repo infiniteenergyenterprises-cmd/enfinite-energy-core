@@ -5,7 +5,7 @@ import {
   MapPin, Phone, Mail, Clock, Shield, Award, Sparkles, CheckCircle2,
   Calendar, ArrowRight, UploadCloud, MessageSquare, Calculator,
   TrendingUp, Leaf, Check, HelpCircle, AlertCircle, Heart, Users,
-  CheckCircle, Globe, Sun, Zap, HardHat, PhoneCall, Video, Navigation
+  CheckCircle, Globe, Sun, Zap, HardHat, PhoneCall, Video, LocateFixed
 } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
@@ -509,7 +509,7 @@ export default function ContactPage() {
                         }}
                         className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors"
                       >
-                        <Navigation className="w-3.5 h-3.5" />
+                        <LocateFixed className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>

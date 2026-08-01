@@ -9,7 +9,7 @@ import {
   Lightbulb, Target, Eye, BookOpen, Handshake, HardHat,
   Cpu, Wifi, BarChart3, Battery, Wrench, Settings,
   GraduationCap, TreePine, Home, Factory, School,
-  Landmark, Stethoscope, Tractor, Clock, Award, Shield, X, Navigation
+  Landmark, Stethoscope, Tractor, Clock, Award, Shield, X, LocateFixed
 } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
@@ -784,7 +784,7 @@ export default function CompanyPage() {
                       }}
                       className="absolute right-2 top-2 p-1.5 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg transition-colors"
                     >
-                      <Navigation className="w-3.5 h-3.5" />
+                      <LocateFixed className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

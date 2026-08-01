@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
-import { Sun, Battery, IndianRupee, Leaf, Zap, ArrowRight, ShieldCheck, MapPin, CheckCircle2, ChevronRight, Check, Sparkles, Navigation, Home, Building2, Shield, Wrench, X } from 'lucide-react';
+import { Sun, Battery, IndianRupee, Leaf, Zap, ArrowRight, ShieldCheck, MapPin, CheckCircle2, ChevronRight, Check, Sparkles, LocateFixed, Home, Building2, Shield, Wrench, X } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 
@@ -419,7 +419,7 @@ export function SavingsCalculator() {
                         }}
                         className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg transition-colors"
                       >
-                        <Navigation className="w-4 h-4" />
+                        <LocateFixed className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
