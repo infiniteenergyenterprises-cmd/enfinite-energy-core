@@ -3,15 +3,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // true for 465
-
+  service: 'gmail',
   auth: {
     user: process.env.SMTP_EMAIL || '',
     pass: process.env.SMTP_PASSWORD || '',
   },
-  connectionTimeout: 10000, // 10 seconds timeout
 });
 
 export interface LeadData {
