@@ -102,30 +102,51 @@ export default function LeadsPage() {
   };
 
   const sendConfirmationEmail = async (id: string) => {
+    const lead = leads.find(l => l.id === id);
+    if (!lead || !lead.email) {
+      return showToast('This lead does not have an email address.', 'error');
+    }
+
     setConfirmDialog({
       message: 'Are you sure you want to send the AI Confirmation email to this user?',
       action: async () => {
         setConfirmDialog(null);
         setUpdatingId(id);
         try {
-          const token = localStorage.getItem('adminToken');
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/leads/${id}/confirm-email`, {
+          // 1. Send Email via Vercel API Route
+          const emailRes = await fetch('/api/confirm-email', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ leadEmail: lead.email, leadName: lead.name }),
+          });
+          const emailData = await emailRes.json();
+
+          if (!emailData.success) {
+            showToast(emailData.message || 'Failed to send email via Vercel', 'error');
+            setUpdatingId(null);
+            return;
+          }
+
+          // 2. If email sent successfully, update status on Render Backend
+          const token = localStorage.getItem('adminToken');
+          const statusRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/leads/${id}`, {
+            method: 'PATCH',
             headers: { 
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
+            body: JSON.stringify({ status: 'CONTACTED' }),
           });
-          const data = await res.json();
-          if (data.success) {
+          
+          if (statusRes.ok) {
             showToast('Confirmation email sent successfully!', 'success');
             setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'CONTACTED' } : l));
           } else {
-            showToast(data.message || 'Failed to send email', 'error');
+            showToast('Email sent, but failed to update status on server.', 'error');
           }
-        } catch (e) {
+        } catch (e: any) {
           console.error(e);
-          showToast('Network error while sending email.', 'error');
+          showToast(e.message || 'Network error while sending email.', 'error');
         } finally {
           setUpdatingId(null);
         }
