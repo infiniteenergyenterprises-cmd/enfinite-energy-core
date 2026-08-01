@@ -157,8 +157,8 @@ export function HeroSection() {
       ))}
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 z-10 bg-[#0A192F]/40 mix-blend-multiply" />
-      <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0A192F]/90 via-[#0A192F]/60 to-transparent" />
+      <div className="absolute inset-0 z-10 bg-black/30" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0A192F] via-[#0A192F]/70 to-transparent" />
 
       {/* Main Content */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-4 lg:px-6 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
