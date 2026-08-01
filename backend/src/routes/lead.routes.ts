@@ -19,24 +19,10 @@ router.post('/', async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'Please provide a valid 10-digit mobile number.' });
     }
 
-    if (email || phone) {
-      const existingLead = await prisma.lead.findFirst({
-        where: {
-          OR: [
-            ...(email ? [{ email }] : []),
-            ...(phone ? [{ phone }] : []),
-          ],
-          type: type || 'CONTACT'
-        }
-      });
-
-      if (existingLead) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'We have already received a request from you. Our team will get in touch with you shortly.' 
-        });
-      }
-    }
+    // Removed duplicate check to allow users to submit multiple times
+    // if (email || phone) {
+    //   const existingLead = ...
+    // }
 
     const lead = await prisma.lead.create({
       data: {
