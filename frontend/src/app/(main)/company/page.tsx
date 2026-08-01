@@ -176,8 +176,9 @@ export default function CompanyPage() {
 
       {/* ══ HERO ══ */}
       <section className="relative pt-12 pb-12 bg-[#0B1E3D] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/20.png')] bg-cover bg-center opacity-85" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E3D]/95 via-[#0B1E3D]/65 to-transparent" />
+        <div className="absolute inset-0 bg-[url('/20.png')] bg-cover bg-center" />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E3D] via-[#0B1E3D]/70 to-transparent" />
         <div className="absolute top-10 left-8 w-80 h-80 bg-[#F5A623]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-16 w-60 h-60 bg-blue-500/10 rounded-full blur-3xl" />
 

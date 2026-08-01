@@ -208,8 +208,9 @@ export default function CareersPage() {
 
       {/* ══════════════════════ HERO ══════════════════════ */}
       <section className="relative pt-28 pb-14 overflow-hidden bg-[#0B1E3D]">
-        <div className="absolute inset-0 bg-cover bg-center opacity-85" style={{ backgroundImage: `url('${heroImg}')` }} />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E3D] via-[#0B1E3D]/70 to-[#0B1E3D]/30" />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${heroImg}')` }} />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E3D] via-[#0B1E3D]/70 to-transparent" />
         <div className="absolute top-10 left-10 w-80 h-80 bg-[#F5A623]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-10 w-96 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 

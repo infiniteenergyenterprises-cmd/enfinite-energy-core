@@ -223,8 +223,9 @@ export default function ContactPage() {
 
       {/* ══════════════════════ HERO SECTION ══════════════════════ */}
       <section className="relative pt-32 pb-10 bg-[#0B1E3D] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/20.png')] bg-cover bg-center opacity-85" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E3D]/95 via-[#0B1E3D]/70 to-transparent" />
+        <div className="absolute inset-0 bg-[url('/20.png')] bg-cover bg-center" />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E3D] via-[#0B1E3D]/70 to-transparent" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-4 lg:px-6">
           {/* Header titles */}
