@@ -109,47 +109,44 @@ export default function LeadsPage() {
 
     setConfirmDialog({
       message: 'Are you sure you want to send the AI Confirmation email to this user?',
-      action: async () => {
+      action: () => {
         setConfirmDialog(null);
-        setUpdatingId(id);
-        try {
-          // 1. Send Email via Vercel API Route
-          const emailRes = await fetch('/api/confirm-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ leadEmail: lead.email, leadName: lead.name }),
-          });
-          const emailData = await emailRes.json();
+        
+        // Optimistic UI Update (Microsecond response)
+        showToast('Confirmation email is sending in background...', 'success');
+        setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'CONTACTED' } : l));
 
+        // Fire and forget - don't block UI with await
+        fetch('/api/confirm-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ leadEmail: lead.email, leadName: lead.name }),
+        })
+        .then(res => res.json())
+        .then(emailData => {
           if (!emailData.success) {
             showToast(emailData.message || 'Failed to send email via Vercel', 'error');
-            setUpdatingId(null);
+            // Revert optimistic update on fail
+            setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'NEW' } : l));
             return;
           }
-
-          // 2. If email sent successfully, update status on Render Backend
+          // Update status on Render Backend
           const token = localStorage.getItem('adminToken');
-          const statusRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/leads/${id}`, {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/leads/${id}`, {
             method: 'PATCH',
             headers: { 
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ status: 'CONTACTED' }),
-          });
-          
-          if (statusRes.ok) {
-            showToast('Confirmation email sent successfully!', 'success');
-            setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'CONTACTED' } : l));
-          } else {
-            showToast('Email sent, but failed to update status on server.', 'error');
-          }
-        } catch (e: any) {
+          }).catch(e => console.error('Backend status update failed:', e));
+        })
+        .catch(e => {
           console.error(e);
-          showToast(e.message || 'Network error while sending email.', 'error');
-        } finally {
-          setUpdatingId(null);
-        }
+          showToast('Network error while sending email.', 'error');
+          // Revert optimistic update on fail
+          setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'NEW' } : l));
+        });
       }
     });
   };
