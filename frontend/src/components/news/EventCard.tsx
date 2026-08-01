@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, CheckCircle, ArrowRight, X } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 interface EventCardProps {
   day: string;
@@ -13,6 +15,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ day, month, year, title, location, desc, image, time = "10:00 AM - 4:00 PM" }: EventCardProps) {
+  const { width, height } = useWindowSize();
   const [registered, setRegistered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState('');
@@ -115,7 +118,10 @@ export function EventCard({ day, month, year, title, location, desc, image, time
       {/* Registration Modal Dialog */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+          {registered && (
+            <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+          )}
+          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200 z-[101]">
             <button 
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"

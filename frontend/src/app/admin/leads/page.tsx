@@ -361,8 +361,8 @@ export default function LeadsPage() {
                     </td>
                     {/* Action */}
                     <td className="px-3 md:px-4 py-4 whitespace-nowrap">
-                      <div className="flex flex-col gap-2">
-                        <div className="relative w-28">
+                      <div className="flex flex-col gap-2 w-32">
+                        <div className="relative w-full">
                           <select
                             value={lead.status}
                             disabled={updatingId === lead.id}
@@ -376,26 +376,29 @@ export default function LeadsPage() {
                           </select>
                           <ChevronRight className="w-3 h-3 text-white/30 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
                         </div>
-                        {lead.email && (
+                        
+                        <div className="flex items-center gap-2 w-full">
+                          {lead.email ? (
+                            <button 
+                              onClick={() => sendConfirmationEmail(lead.id)}
+                              disabled={updatingId === lead.id}
+                              className="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center disabled:opacity-50 h-7"
+                              title="Send Confirmation Email"
+                            >
+                              {updatingId === lead.id ? <RefreshCw className="w-3 h-3 animate-spin" /> : 'Confirm'}
+                            </button>
+                          ) : (
+                            <div className="flex-1"></div>
+                          )}
                           <button 
-                            onClick={() => sendConfirmationEmail(lead.id)}
+                            onClick={() => deleteLead(lead.id)}
                             disabled={updatingId === lead.id}
-                            className="w-28 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-1.5 rounded text-[9px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center disabled:opacity-50"
+                            className="w-7 h-7 shrink-0 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 hover:scale-105 active:scale-95"
+                            title="Delete Lead"
                           >
-                            {updatingId === lead.id ? (
-                              <span className="flex items-center gap-1">
-                                <RefreshCw className="w-3 h-3 animate-spin" /> Sending...
-                              </span>
-                            ) : 'Confirm Mail'}
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
-                        )}
-                        <button 
-                          onClick={() => deleteLead(lead.id)}
-                          disabled={updatingId === lead.id}
-                          className="w-28 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-2 py-1.5 rounded text-[9px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 disabled:opacity-50"
-                        >
-                          <Trash2 className="w-3 h-3" /> Delete
-                        </button>
+                        </div>
                       </div>
                     </td>
                   </tr>

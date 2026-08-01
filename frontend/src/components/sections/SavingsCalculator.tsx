@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { ArrowRight, CheckCircle2, Home, Building2, Zap, Shield, Wrench, X } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 const API = process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000');
 const CONTENT_KEY = 'HOME_SAVINGS_CALCULATOR';
@@ -33,6 +35,7 @@ const DEFAULTS: CalcContent = {
 };
 
 export function SavingsCalculator() {
+  const { width, height } = useWindowSize();
   const [bill, setBill] = useState(5000);
   const [propertyType, setPropertyType] = useState('residential');
   const [content, setContent] = useState<CalcContent>(DEFAULTS);
@@ -318,7 +321,10 @@ export function SavingsCalculator() {
       {/* Survey Registration Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+          {registered && (
+            <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+          )}
+          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200 z-[101]">
             <button 
               onClick={() => { setShowModal(false); setRegistered(false); }}
               className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"

@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { X, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { useLeadModal } from "../../context/LeadModalContext";
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 export function LeadModal() {
   const { isOpen, closeModal, defaultType } = useLeadModal();
+  const { width, height } = useWindowSize();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -73,6 +76,7 @@ export function LeadModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {success && <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 60 }} />}
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"

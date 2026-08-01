@@ -6,6 +6,8 @@ import {
   Landmark, LineChart, Cpu, PlayCircle, Mail, MapPin, ExternalLink, Rss 
 } from 'lucide-react';
 import Link from 'next/link';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 // Import newly created components
 import { BreakingNews } from '@/components/news/BreakingNews';
@@ -15,9 +17,11 @@ import { MarketUpdateWidget } from '@/components/news/MarketUpdateWidget';
 import { GovernmentSchemes } from '@/components/news/GovernmentSchemes';
 
 export default function NewsAndEventsPage() {
+  const { width, height } = useWindowSize();
   const [activeCategory, setActiveCategory] = useState('All Updates');
   const [searchQuery, setSearchQuery] = useState('');
   const [liveNews, setLiveNews] = useState<any[]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [companyNews, setCompanyNews] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,8 +109,10 @@ export default function NewsAndEventsPage() {
       });
       const data = await res.json();
       if (data.success) {
+        setShowConfetti(true);
         alert('Thank you for subscribing to our newsletter!');
         setNewsletterEmail('');
+        setTimeout(() => setShowConfetti(false), 5000);
       } else {
         alert(data.message || 'Subscription failed, please try again.');
       }
@@ -136,9 +142,11 @@ export default function NewsAndEventsPage() {
       });
       const data = await res.json();
       if (data.success) {
+        setShowConfetti(true);
         alert('Lead submitted successfully! Our expert will call you back shortly.');
         setCtaName('');
         setCtaPhone('');
+        setTimeout(() => setShowConfetti(false), 5000);
       } else {
         alert(data.message || 'Lead submission failed.');
       }
@@ -151,8 +159,10 @@ export default function NewsAndEventsPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pt-8">
-      
+    <div className="bg-gray-50 min-h-screen pt-8 relative">
+      {showConfetti && (
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 9999, position: 'fixed', top: 0, left: 0 }} />
+      )}
       {/* 1. Hero Section */}
       <section className="relative bg-[#0B1120] pt-8 pb-8 overflow-visible border-b border-gray-200 min-h-[280px]">
         {/* Hero image on the right */}

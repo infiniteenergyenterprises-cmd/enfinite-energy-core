@@ -6,9 +6,12 @@ import { CheckCircle2, ShieldCheck, ArrowRight, Zap, ChevronLeft, ChevronRight, 
 import Link from 'next/link';
 import { useLeadModal } from '@/context/LeadModalContext';
 import { usePageContent } from '@/hooks/usePageContent';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 // ── Hero Calculator Card ──────────────────────────────────────────────────────
 function HeroCalculatorCard() {
+  const { width, height } = useWindowSize();
   const [bill, setBill] = useState('');
   const [propType, setPropType] = useState('Residential Home');
   const [phone, setPhone] = useState('');
@@ -38,6 +41,9 @@ function HeroCalculatorCard() {
 
   return (
     <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+      {done && (
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed', top: 0, left: 0 }} />
+      )}
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-blue/40 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
       <div className="relative z-10">

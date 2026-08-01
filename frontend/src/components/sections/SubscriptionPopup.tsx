@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Check, ArrowRight, ShieldCheck, User, Phone, ChevronDown, Sun } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 interface SubscriptionPopupProps {
   show: boolean;
@@ -16,6 +18,7 @@ const VISIT_REASONS = [
 ];
 
 export function SubscriptionPopup({ show, onClose }: SubscriptionPopupProps) {
+  const { width, height } = useWindowSize();
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
@@ -62,6 +65,9 @@ export function SubscriptionPopup({ show, onClose }: SubscriptionPopupProps) {
       }`}
       onClick={handleClose}
     >
+      {submitted && (
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+      )}
       <div
         onClick={(e) => e.stopPropagation()}
         className={`relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 ${

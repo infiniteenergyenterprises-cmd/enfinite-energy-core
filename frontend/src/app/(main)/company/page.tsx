@@ -11,6 +11,8 @@ import {
   GraduationCap, TreePine, Home, Factory, School,
   Landmark, Stethoscope, Tractor, Clock, Award, Shield, X
 } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 /* ─── DATA ─── */
 const journey = [
@@ -103,6 +105,7 @@ const locations = [
 ];
 
 export default function CompanyPage() {
+  const { width, height } = useWindowSize();
   const [activeJ, setActiveJ] = useState(0);
   const [cmsStats,  setCmsStats]  = useState<{val:string;label:string}[]|null>(null);
   const [cmsTeam,   setCmsTeam]   = useState<any[]|null>(null);
@@ -725,7 +728,10 @@ export default function CompanyPage() {
       {/* 2. Site Survey Form Modal */}
       {showSurveyForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#0B1E3D] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl text-white">
+          {formSubmitted && (
+            <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+          )}
+          <div className="bg-[#0B1E3D] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl text-white z-[101]">
             <button onClick={() => setShowSurveyForm(false)} className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors">
               <X className="w-5 h-5" />
             </button>

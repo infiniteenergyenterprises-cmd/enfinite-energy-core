@@ -8,6 +8,8 @@ import {
   BookOpen, Globe, GraduationCap, Handshake, HeartPulse, Calendar,
   Gift, Trophy, HardHat, Smile, Lightbulb
 } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 interface Career {
   id: string;
@@ -51,6 +53,7 @@ const deptBadge: Record<string, string> = {
 };
 
 export default function CareersPage() {
+  const { width, height } = useWindowSize();
   const [jobs, setJobs]           = useState<Career[]>(STATIC_JOBS);
   const [loading, setLoading]     = useState(true);
   const [heroImg, setHeroImg]     = useState('/19.png');
@@ -598,7 +601,10 @@ export default function CareersPage() {
       {/* ══════════════════════ APPLY / RESUME MODAL ══════════════════════ */}
       {(showApply || showSubmitResume) && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-lg p-7 relative shadow-2xl my-4">
+          {submitted && (
+            <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+          )}
+          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-lg p-7 relative shadow-2xl my-4 z-[101]">
             <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
               <X className="w-5 h-5" />
             </button>

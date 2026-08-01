@@ -4,6 +4,8 @@ import {
   Home, Building2, Sprout, FileText, Calculator, ClipboardList,
   MapPin, ChevronRight, Phone, MessageCircle, Star, Info, X, Zap
 } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 const schemeCards = [
   { num: "01", icon: <Home className="w-6 h-6" />, color: "#10B981", bg: "bg-emerald-500/10 border-emerald-500/20", title: "PM Surya Ghar\nMuft Bijli Yojana", desc: "Rooftop Solar for Residential Homes. Get up to ₹78,000 subsidy from Government of India." },
@@ -50,12 +52,14 @@ const documents = [
 const stateOptions = ["Uttar Pradesh", "Maharashtra", "Rajasthan", "Gujarat", "Karnataka", "Delhi", "Punjab", "Haryana"];
 
 export function GovernmentSchemes() {
+  const { width, height } = useWindowSize();
   const [bill, setBill] = useState(1500);
   const [capacity, setCapacity] = useState("3 KW");
   const [selState, setSelState] = useState("Uttar Pradesh");
 
   // Modal States
   const [showModal, setShowModal] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [modalTitle, setModalTitle] = useState('Apply for Solar Subsidy');
   const [modalType, setModalType] = useState('SCHEME_APPLICATION');
   const [name, setName] = useState('');
@@ -96,11 +100,7 @@ export function GovernmentSchemes() {
       });
       const data = await res.json();
       if (data.success) {
-        alert('Thank you! Details submitted successfully. Our solar expert will call you shortly.');
-        setShowModal(false);
-        setName('');
-        setEmail('');
-        setPhone('');
+        setSubmitted(true);
       } else {
         alert(data.message || 'Submission failed');
       }
@@ -437,61 +437,84 @@ export function GovernmentSchemes() {
       {/* LEAD POPUP DIALOG */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+          {submitted && (
+            <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+          )}
+          <div className="bg-[#0f1d35] border border-white/10 rounded-2xl w-full max-w-md p-6 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200 z-[101]">
             <button 
-              onClick={() => setShowModal(false)}
+              onClick={() => { setShowModal(false); setSubmitted(false); setName(''); setEmail(''); setPhone(''); }}
               className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
             
-            <h3 className="text-lg font-black text-white mb-1">Check Subsidy &amp; Schemes</h3>
-            <p className="text-xs text-primary font-bold mb-4">{modalTitle}</p>
-            
-            <form onSubmit={handleModalSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Full Name</label>
-                <input 
-                  type="text" 
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name" 
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary placeholder-white/20"
-                />
+            {submitted ? (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h3 className="text-xl font-black text-white mb-2">Request Submitted!</h3>
+                <p className="text-sm text-white/60 mb-6">
+                  Thank you! Details submitted successfully. Our solar expert will call you shortly.
+                </p>
+                <button 
+                  onClick={() => { setShowModal(false); setSubmitted(false); setName(''); setEmail(''); setPhone(''); }}
+                  className="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-xl transition-all text-sm"
+                >
+                  Close Window
+                </button>
               </div>
-              
-              <div>
-                <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Email Address</label>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email" 
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary placeholder-white/20"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Mobile Number</label>
-                <input 
-                  type="tel" 
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Enter mobile number" 
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary placeholder-white/20"
-                />
-              </div>
-              
-              <button 
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-primary hover:brightness-110 disabled:opacity-50 text-[#0A192F] font-black py-3 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm mt-2"
-              >
-                {submitting ? 'Submitting details...' : 'Submit Request'}
-              </button>
-            </form>
+            ) : (
+              <>
+                <h3 className="text-lg font-black text-white mb-1">Check Subsidy &amp; Schemes</h3>
+                <p className="text-xs text-primary font-bold mb-4">{modalTitle}</p>
+                
+                <form onSubmit={handleModalSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter your name" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <input 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Mobile Number</label>
+                    <input 
+                      type="tel" 
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Enter mobile number" 
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary placeholder-white/20"
+                    />
+                  </div>
+                  
+                  <button 
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-primary hover:brightness-110 disabled:opacity-50 text-[#0A192F] font-black py-3 rounded-xl shadow-lg shadow-primary/20 transition-all text-sm mt-2"
+                  >
+                    {submitting ? 'Submitting details...' : 'Submit Request'}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       )}

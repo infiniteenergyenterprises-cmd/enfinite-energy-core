@@ -6,6 +6,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Search, ChevronRight, Mail, Calendar, User, Clock, ArrowRight, Check, Plus, Minus, Info } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 interface BlogPost {
   id: number;
@@ -19,6 +21,7 @@ interface BlogPost {
 }
 
 export default function ResourcesPage() {
+  const { width, height } = useWindowSize();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -121,10 +124,14 @@ export default function ResourcesPage() {
     if (!subscribedEmail) return;
     setSubscriptionSuccess(true);
     setSubscribedEmail('');
+    setTimeout(() => setSubscriptionSuccess(false), 5000);
   };
 
   return (
-    <div className="bg-[#FAFBFD] min-h-screen pt-10">
+    <div className="bg-[#FAFBFD] min-h-screen pt-10 relative">
+      {subscriptionSuccess && (
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 9999, position: 'fixed', top: 0, left: 0 }} />
+      )}
       
       {/* 1. Page Header / Hero */}
       <section className="relative bg-[#0B1E3D] text-white py-8 sm:py-12 px-4 sm:px-4 lg:px-6 overflow-hidden">

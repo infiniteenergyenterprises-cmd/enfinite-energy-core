@@ -7,6 +7,8 @@ import {
   TrendingUp, Leaf, Check, HelpCircle, AlertCircle, Heart, Users,
   CheckCircle, Globe, Sun, Zap, HardHat, PhoneCall, Video
 } from 'lucide-react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 /* ─── DATA ─── */
 const states = [
@@ -24,6 +26,7 @@ const partners = [
 ];
 
 export default function ContactPage() {
+  const { width, height } = useWindowSize();
   /* CMS contact info */
   const [cmsContact, setCmsContact] = React.useState<any>(null);
   const [heroTitle,  setHeroTitle]  = React.useState("Let's Build Your Solar Future Together");
@@ -214,6 +217,9 @@ export default function ContactPage() {
 
   return (
     <div className="bg-white min-h-screen text-gray-900 overflow-x-hidden">
+      {(consultSubmitted || surveySubmitted) && (
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={600} style={{ zIndex: 100, position: 'fixed' }} />
+      )}
 
       {/* ══════════════════════ HERO SECTION ══════════════════════ */}
       <section className="relative pt-32 pb-10 bg-[#0B1E3D] overflow-hidden">
