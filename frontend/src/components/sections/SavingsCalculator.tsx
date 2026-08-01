@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/Button';
-import { ArrowRight, CheckCircle2, Home, Building2, Zap, Shield, Wrench, X } from 'lucide-react';
+import { Sun, Battery, IndianRupee, Leaf, Zap, ArrowRight, ShieldCheck, MapPin, CheckCircle2, ChevronRight, Check, Sparkles, Navigation, Home, Building2, Shield, Wrench, X } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 
@@ -391,14 +390,37 @@ export function SavingsCalculator() {
 
                   <div>
                     <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1.5">Installation Address</label>
-                    <input 
-                      type="text" 
-                      required
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      placeholder="City or full address" 
-                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
-                    />
+                    <div className="relative">
+                      <input 
+                        type="text" 
+                        required
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="City or full address" 
+                        className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-white/20"
+                      />
+                      <button 
+                        type="button" 
+                        title="Get Current Location"
+                        onClick={() => {
+                          if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                              (position) => {
+                                setAddress(prev => `Lat: ${position.coords.latitude.toFixed(4)}, Lng: ${position.coords.longitude.toFixed(4)}\n` + prev);
+                              },
+                              (err) => {
+                                alert("Couldn't fetch location. Please ensure location permissions are enabled.");
+                              }
+                            );
+                          } else {
+                            alert("Geolocation is not supported by this browser.");
+                          }
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg transition-colors"
+                      >
+                        <Navigation className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                   
                   <button 

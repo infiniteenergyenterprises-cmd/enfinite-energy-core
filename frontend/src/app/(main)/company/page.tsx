@@ -9,7 +9,7 @@ import {
   Lightbulb, Target, Eye, BookOpen, Handshake, HardHat,
   Cpu, Wifi, BarChart3, Battery, Wrench, Settings,
   GraduationCap, TreePine, Home, Factory, School,
-  Landmark, Stethoscope, Tractor, Clock, Award, Shield, X
+  Landmark, Stethoscope, Tractor, Clock, Award, Shield, X, Navigation
 } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
@@ -760,7 +760,33 @@ export default function CompanyPage() {
                 </div>
                 <div>
                   <label className="block text-[10px] uppercase font-bold text-white/60 mb-1">Install Address / Sector Notes</label>
-                  <textarea required rows={2} placeholder="Rooftop size, location address..." value={formData.address} onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))} className="w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F5A623]" />
+                  <div className="relative">
+                    <textarea required rows={2} placeholder="Rooftop size, location address..." value={formData.address} onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))} className="w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2 pr-10 text-xs text-white focus:outline-none focus:border-[#F5A623]" />
+                    <button 
+                      type="button" 
+                      title="Get Current Location"
+                      onClick={() => {
+                        if (navigator.geolocation) {
+                          navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                              setFormData(prev => ({
+                                ...prev, 
+                                address: `Lat: ${position.coords.latitude.toFixed(4)}, Lng: ${position.coords.longitude.toFixed(4)}\n` + prev.address
+                              }));
+                            },
+                            (err) => {
+                              alert("Couldn't fetch location. Please ensure location permissions are enabled.");
+                            }
+                          );
+                        } else {
+                          alert("Geolocation is not supported by this browser.");
+                        }
+                      }}
+                      className="absolute right-2 top-2 p-1.5 bg-white/10 hover:bg-white/20 text-white/80 rounded-lg transition-colors"
+                    >
+                      <Navigation className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-[10px] uppercase font-bold text-white/60 mb-1">Required Capacity</label>

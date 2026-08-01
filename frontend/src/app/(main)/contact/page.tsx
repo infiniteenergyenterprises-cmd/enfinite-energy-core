@@ -5,7 +5,7 @@ import {
   MapPin, Phone, Mail, Clock, Shield, Award, Sparkles, CheckCircle2,
   Calendar, ArrowRight, UploadCloud, MessageSquare, Calculator,
   TrendingUp, Leaf, Check, HelpCircle, AlertCircle, Heart, Users,
-  CheckCircle, Globe, Sun, Zap, HardHat, PhoneCall, Video
+  CheckCircle, Globe, Sun, Zap, HardHat, PhoneCall, Video, Navigation
 } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
@@ -114,6 +114,9 @@ export default function ContactPage() {
 
   /* 3. Site Survey Form State */
   const [surveyForm, setSurveyForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
     date: '2026-07-27',
     timeSlot: '10:00 AM - 12:00 PM',
     location: ''
@@ -177,24 +180,21 @@ export default function ContactPage() {
 
   const handleSurveySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!surveyForm.name || !surveyForm.phone) {
+      setSurveyError('Name and Phone are required.');
+      return;
+    }
     setSurveyError('');
     setSurveyLoading(true);
-    
-    // Quick prompt for Name, Email, Phone since survey form only has Date/Time/Location in UI
-    const name = window.prompt("Please enter your Full Name:");
-    if (!name) { setSurveyLoading(false); return; }
-    const phone = window.prompt("Please enter your Mobile Number (10 digits):");
-    if (!phone || phone.length !== 10) { alert('Valid 10-digit phone required.'); setSurveyLoading(false); return; }
-    const email = window.prompt("Please enter your Email (Optional):") || '';
 
     try {
       const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: name,
-          email: email,
-          phone: phone,
+          name: surveyForm.name,
+          email: surveyForm.email,
+          phone: surveyForm.phone,
           type: 'SURVEY',
           message: `Survey Date: ${surveyForm.date}, Time: ${surveyForm.timeSlot}, Location: ${surveyForm.location}`
         })
@@ -204,13 +204,13 @@ export default function ContactPage() {
         setSurveySubmitted(true);
         setTimeout(() => {
           setSurveySubmitted(false);
-          setSurveyForm({ date: '2026-07-27', timeSlot: '10:00 AM - 12:00 PM', location: '' });
+          setSurveyForm({ name: '', phone: '', email: '', date: '2026-07-27', timeSlot: '10:00 AM - 12:00 PM', location: '' });
         }, 3000);
       } else {
-        alert(data.message || 'Submission failed');
+        setSurveyError(data.message || 'Submission failed');
       }
     } catch (err) {
-      alert('Network error. Please try again later.');
+      setSurveyError('Network error. Please try again later.');
     }
     setSurveyLoading(false);
   };
@@ -454,23 +454,64 @@ export default function ContactPage() {
                   <p className="text-[11px] text-gray-500 mt-1">Our engineer will contact you to confirm the time slot.</p>
                 </div>
               ) : (
-                <form onSubmit={handleSurveySubmit} className="space-y-4.5">
+                <form onSubmit={handleSurveySubmit} className="space-y-4">
+                  {surveyError && (
+                    <div className="bg-red-50 text-red-600 p-2 rounded-lg text-xs border border-red-100 mb-2">
+                      {surveyError}
+                    </div>
+                  )}
                   <div>
-                    <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Select Date</label>
-                    <input required type="date" value={surveyForm.date} onChange={(e) => setSurveyForm({...surveyForm, date: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-3 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
+                    <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Full Name <span className="text-red-500">*</span></label>
+                    <input required type="text" placeholder="Enter your name" value={surveyForm.name} onChange={(e) => setSurveyForm({...surveyForm, name: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
                   </div>
                   <div>
-                    <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Select Time</label>
-                    <select value={surveyForm.timeSlot} onChange={(e) => setSurveyForm({...surveyForm, timeSlot: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-3 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm">
-                      <option>10:00 AM - 12:00 PM</option>
-                      <option>12:00 PM - 02:00 PM</option>
-                      <option>02:00 PM - 04:00 PM</option>
-                      <option>04:00 PM - 06:00 PM</option>
-                    </select>
+                    <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Mobile Number <span className="text-red-500">*</span></label>
+                    <input required type="tel" pattern="[0-9]{10}" maxLength={10} minLength={10} placeholder="10-digit mobile" value={surveyForm.phone} onChange={(e) => setSurveyForm({...surveyForm, phone: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Select Date</label>
+                      <input required type="date" value={surveyForm.date} onChange={(e) => setSurveyForm({...surveyForm, date: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Select Time</label>
+                      <select value={surveyForm.timeSlot} onChange={(e) => setSurveyForm({...surveyForm, timeSlot: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm">
+                        <option>10:00 AM - 12:00 PM</option>
+                        <option>12:00 PM - 02:00 PM</option>
+                        <option>02:00 PM - 04:00 PM</option>
+                        <option>04:00 PM - 06:00 PM</option>
+                      </select>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-[10px] uppercase font-black text-gray-700 mb-1.5">Your Location / Address</label>
-                    <input required type="text" placeholder="Enter complete address" value={surveyForm.location} onChange={(e) => setSurveyForm({...surveyForm, location: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl px-3.5 py-3 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
+                    <div className="relative">
+                      <input required type="text" placeholder="Enter complete address" value={surveyForm.location} onChange={(e) => setSurveyForm({...surveyForm, location: e.target.value})} className="w-full bg-white border border-gray-300 font-semibold rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#F5A623] focus:ring-1 focus:ring-[#F5A623] shadow-sm" />
+                      <button 
+                        type="button" 
+                        title="Get Current Location"
+                        onClick={() => {
+                          if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                              (position) => {
+                                setSurveyForm({
+                                  ...surveyForm, 
+                                  location: `Lat: ${position.coords.latitude.toFixed(4)}, Lng: ${position.coords.longitude.toFixed(4)}`
+                                });
+                              },
+                              (err) => {
+                                alert("Couldn't fetch location. Please ensure location permissions are enabled.");
+                              }
+                            );
+                          } else {
+                            alert("Geolocation is not supported by this browser.");
+                          }
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors"
+                      >
+                        <Navigation className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                   <button type="submit" disabled={surveyLoading} className="w-full bg-[#0B1E3D] hover:bg-[#1a3260] text-white font-black py-3.5 rounded-xl text-xs transition-all uppercase tracking-wider shadow-md mt-2 disabled:opacity-70">
                     {surveyLoading ? 'Booking...' : 'Book Site Survey'}
