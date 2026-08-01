@@ -3,6 +3,21 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { VisitorTracker } from "@/components/utils/VisitorTracker";
 import { Chatbot } from "@/components/ui/Chatbot";
+import { PageContentProvider } from "@/components/utils/ContentProvider";
+
+async function getInitialContent() {
+  try {
+    const url = process.env.NEXT_PUBLIC_API_URL || 'https://enfinite-energy-core.onrender.com/api';
+    const res = await fetch(url + '/content', { next: { revalidate: 60 } });
+    if (res.ok) {
+      const data = await res.json();
+      return data.map || null;
+    }
+  } catch (e) {
+    console.error('Failed to fetch initial content:', e);
+  }
+  return null;
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,20 +79,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contentMap = await getInitialContent();
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-screen flex flex-col bg-[#F8FAFC]">
-        <VisitorTracker />
-        {children}
-        <Chatbot />
+        <PageContentProvider initialData={contentMap}>
+          <VisitorTracker />
+          {children}
+          <Chatbot />
+        </PageContentProvider>
       </body>
     </html>
   );
