@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Phone, Mail, MessageSquare, Clock, RefreshCw,
   CheckCircle2, XCircle, User, Tag, TrendingUp,
-  Search, Filter, Download, ChevronRight, Zap
+  Search, Filter, Download, ChevronRight, Zap, Trash2
 } from 'lucide-react';
 
 interface Lead {
@@ -126,6 +126,37 @@ export default function LeadsPage() {
         } catch (e) {
           console.error(e);
           showToast('Network error while sending email.', 'error');
+        } finally {
+          setUpdatingId(null);
+        }
+      }
+    });
+  };
+
+  const deleteLead = async (id: string) => {
+    setConfirmDialog({
+      message: 'Are you sure you want to permanently delete this lead? This cannot be undone.',
+      action: async () => {
+        setConfirmDialog(null);
+        setUpdatingId(id);
+        try {
+          const token = localStorage.getItem('adminToken');
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + ''}/leads/${id}`, {
+            method: 'DELETE',
+            headers: { 
+              'Authorization': `Bearer ${token}`
+            },
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('Lead deleted successfully!', 'success');
+            setLeads(prev => prev.filter(l => l.id !== id));
+          } else {
+            showToast(data.message || 'Failed to delete lead', 'error');
+          }
+        } catch (e) {
+          console.error(e);
+          showToast('Network error while deleting lead.', 'error');
         } finally {
           setUpdatingId(null);
         }
@@ -351,9 +382,20 @@ export default function LeadsPage() {
                             disabled={updatingId === lead.id}
                             className="w-28 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-1.5 rounded text-[9px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center disabled:opacity-50"
                           >
-                            Confirm Mail
+                            {updatingId === lead.id ? (
+                              <span className="flex items-center gap-1">
+                                <RefreshCw className="w-3 h-3 animate-spin" /> Sending...
+                              </span>
+                            ) : 'Confirm Mail'}
                           </button>
                         )}
+                        <button 
+                          onClick={() => deleteLead(lead.id)}
+                          disabled={updatingId === lead.id}
+                          className="w-28 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-2 py-1.5 rounded text-[9px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 disabled:opacity-50"
+                        >
+                          <Trash2 className="w-3 h-3" /> Delete
+                        </button>
                       </div>
                     </td>
                   </tr>

@@ -154,4 +154,39 @@ router.patch('/:id', protect, authorize('ADMIN'), async (req: Request, res: Resp
   }
 });
 
+// ── DELETE /api/leads/:id — Delete a lead ───────────────────────────────────
+router.delete('/:id', protect, authorize('ADMIN'), async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+    
+    // Check if lead exists
+    const lead = await prisma.lead.findUnique({ where: { id } });
+    if (!lead) {
+      return res.status(404).json({ success: false, message: 'Lead not found.' });
+    }
+
+    // Delete from Prisma (DB)
+    await prisma.lead.delete({
+      where: { id },
+    });
+
+    // Also attempt to delete from Firebase if it's an EVENT_REGISTRATION
+    if (lead.type === 'EVENT_REGISTRATION' && admin?.apps?.length > 0) {
+      try {
+        const snapshot = await admin.firestore().collection('event_registrations').where('id', '==', id).get();
+        snapshot.forEach(doc => {
+          doc.ref.delete();
+        });
+      } catch (err) {
+        console.error('🔥 Firebase delete error:', err);
+      }
+    }
+
+    return res.json({ success: true, message: 'Lead deleted successfully.' });
+  } catch (error) {
+    console.error('❌ Error deleting lead:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+});
+
 export default router;
