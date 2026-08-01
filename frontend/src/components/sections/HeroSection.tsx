@@ -81,7 +81,7 @@ function HeroCalculatorCard() {
             </div>
             <div>
               <label className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Your Mobile (optional)</label>
-              <input type="tel" placeholder="+91 XXXXX XXXXX" value={phone} onChange={e => setPhone(e.target.value)}
+              <input type="tel" maxLength={10} placeholder="+91 XXXXX XXXXX" value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
                 className="mt-1 w-full border border-white/20 rounded-lg bg-white/5 text-white p-2.5 text-sm outline-none focus:border-primary transition-colors placeholder-gray-500" />
             </div>
             <button type="submit" disabled={submitting || !bill}
