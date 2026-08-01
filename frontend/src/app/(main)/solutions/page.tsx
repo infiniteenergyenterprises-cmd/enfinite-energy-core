@@ -94,6 +94,18 @@ export default function SolutionsPage() {
   const [selectedApp, setSelectedApp] = useState<{img: string, title: string, desc: string, features: string[]} | null>(null);
   const [selectedProject, setSelectedProject] = useState<{tag: string, title: string, loc: string, cap: string, save: string, img: string, desc: string, highlight: string} | null>(null);
 
+  const hero = usePageContent('SOLPAGE_HERO', {
+    title: "Innovative Solar Solutions for Every Need",
+    description: "From residential rooftops to large-scale industrial plants, we deliver high-performance solar systems designed for maximum efficiency and savings.",
+    imageUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2000"
+  });
+
+  const howItWorks = usePageContent('SOLPAGE_HOW_IT_WORKS', {
+    title: "How Our Solutions Work",
+    description: "A simple and effective process to generate, store, and utilize clean solar energy for your daily needs.",
+    imageUrl: "https://images.unsplash.com/photo-1548611716-4191d4e0e470?w=800&q=80"
+  });
+
   useEffect(() => {
     if (selectedApp || selectedProject) {
       document.body.style.overflow = 'hidden';
@@ -122,14 +134,14 @@ export default function SolutionsPage() {
     <div className="bg-white min-h-screen text-[#0A192F]">
       {/* 1. Hero Banner */}
       <section className="relative pt-32 pb-32 px-4 sm:px-4 lg:px-6 bg-[#0A192F] text-white overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-top" style={{ backgroundImage: `url("${hero.imageUrl || hero.img}")` }}></div>
+        <div className="absolute inset-0 bg-cover bg-top" style={{ backgroundImage: `url("${hero.imageUrl || 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2000'}")` }}></div>
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative z-10 max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
             {hero.title}
           </h1>
           <p className="text-lg text-gray-100 max-w-2xl leading-relaxed font-medium">
-            {hero.description || hero.desc}
+            {hero.description}
           </p>
         </div>
       </section>
@@ -153,12 +165,12 @@ export default function SolutionsPage() {
       <section className="py-12 px-4 sm:px-4 lg:px-6 max-w-7xl mx-auto text-center">
         <div className="text-amber-500 font-bold text-sm uppercase tracking-wider mb-2">OUR SOLAR SYSTEMS & FUNCTIONS</div>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#0A192F]">{howItWorks.title}</h2>
-        <p className="text-gray-500 max-w-2xl mx-auto mb-8">{howItWorks.description || howItWorks.desc}</p>
+        <p className="text-gray-500 max-w-2xl mx-auto mb-8">{howItWorks.description}</p>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Diagram */}
           <div className="relative">
-             <img src={howItWorks.imageUrl || howItWorks.img} alt="Solar Working Diagram" className="w-full rounded-2xl shadow-lg" />
+             <img src={howItWorks.imageUrl || 'https://images.unsplash.com/photo-1548611716-4191d4e0e470?w=800&q=80'} alt="Solar Working Diagram" className="w-full rounded-2xl shadow-lg" />
           </div>
           
           {/* Right Content */}

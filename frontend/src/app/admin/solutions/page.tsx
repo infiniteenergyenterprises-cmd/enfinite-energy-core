@@ -19,7 +19,7 @@ async function uploadToImgbb(file: File): Promise<string> {
 }
 
 async function getContent(): Promise<Record<string, any>> {
-  const res = await fetch(`${API}/api/content`);
+  const res = await fetch(`${API}/api/content?t=${Date.now()}`, { cache: 'no-store' });
   if (!res.ok) return {};
   const { map } = await res.json();
   return map || {};
@@ -130,7 +130,7 @@ function SaveBtn({ saving, onClick }: { saving: boolean; onClick: () => void }) 
 
 /* Hero Banner */
 function HeroBanner({ map }: { map: Record<string, any> }) {
-  const KEY = 'SOL_HERO';
+  const KEY = 'SOLPAGE_HERO';
   const [title, setTitle]       = useState(map[KEY]?.title       || 'Our Solar Solutions');
   const [desc,  setDesc]        = useState(map[KEY]?.description || 'Comprehensive solar solutions for homes, businesses, industries and agriculture.');
   const [img,   setImg]         = useState(map[KEY]?.imageUrl    || '/images/16.png');
@@ -274,7 +274,7 @@ function ProjectCard({ map, projKey, defaultTitle, defaultDesc }: { map: Record<
 
 /* How Solutions Work section */
 function HowItWorks({ map }: { map: Record<string, any> }) {
-  const KEY = 'SOL_HOW_IT_WORKS';
+  const KEY = 'SOLPAGE_HOW_IT_WORKS';
   const [img,    setImg]    = useState(map[KEY]?.imageUrl    || '/images/15.png');
   const [title,  setTitle]  = useState(map[KEY]?.title       || 'How Our Solutions Work');
   const [desc,   setDesc]   = useState(map[KEY]?.description || 'Smartly designed systems with advanced functions to deliver maximum efficiency.');

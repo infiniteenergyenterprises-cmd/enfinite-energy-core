@@ -44,10 +44,10 @@ export default function NewsAndEventsPage() {
     async function fetchAll() {
       try {
         const [liveRes, cnRes, evtRes, cmsRes] = await Promise.allSettled([
-          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/news/live').then(r => r.json()),
-          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/company-news').then(r => r.json()),
-          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/events').then(r => r.json()),
-          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content').then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/news/live?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/company-news?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/events?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()),
+          fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()),
         ]);
         if (liveRes.status === 'fulfilled' && liveRes.value.success) setLiveNews(liveRes.value.news);
         if (cnRes.status === 'fulfilled' && cnRes.value.status === 'success' && cnRes.value.data.length > 0) setCompanyNews(cnRes.value.data);

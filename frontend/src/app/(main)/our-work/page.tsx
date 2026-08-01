@@ -175,23 +175,27 @@ export default function OurWorkPage() {
     }
   };
 
+  const heroContent = usePageContent('WORK_HERO', {
+    title: 'Our Work\nReal Projects.\nReal Impact.',
+    description: 'Every project we deliver reflects our commitment to quality, performance and a sustainable future.',
+    imageUrl: '/17.png'
+  });
+
   return (
     <div className="bg-gray-50 min-h-screen font-sans text-gray-900">
       
       {/* 1. Hero Section */}
       <section className="relative pt-12 pb-32 px-4 sm:px-4 lg:px-6 bg-[#0B1120] border-b border-gray-200">
-        <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: 'url("/17.png")' }}></div>
+        <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url("${heroContent.imageUrl || '/17.png'}")` }}></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120]/90 via-[#0B1120]/40 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 via-transparent to-transparent"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-center h-full pt-8 md:pt-12">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2 leading-tight tracking-tight drop-shadow-lg">
-            Our Work<br/>
-            Real Projects.<br/>
-            <span className="text-primary">Real Impact.</span>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-2 leading-tight tracking-tight drop-shadow-lg whitespace-pre-line">
+            {heroContent.title}
           </h1>
-          <p className="text-base text-gray-300 max-w-xl mb-6 mt-4 font-medium">
-            Every project we deliver reflects our commitment to quality, performance and a sustainable future.
+          <p className="text-base text-gray-300 max-w-xl mb-6 mt-4 font-medium whitespace-pre-line">
+            {heroContent.description}
           </p>
           <div className="flex flex-wrap gap-3">
             <button onClick={() => document.getElementById('featured-projects')?.scrollIntoView({ behavior: 'smooth' })} className="bg-primary hover:brightness-110 text-[#0A192F] font-bold py-3 px-6 text-sm rounded flex items-center gap-2 transition-colors cursor-pointer">

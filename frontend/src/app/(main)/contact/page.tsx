@@ -30,7 +30,7 @@ export default function ContactPage() {
   const [heroDesc,   setHeroDesc]   = React.useState('Have a question? Want a free site survey? Our solar experts are ready to help you switch to clean energy.');
 
   React.useEffect(() => {
-    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content?t=' + Date.now(), { cache: 'no-store' })
       .then(r => r.json())
       .then(d => {
         const map = d.map || {};

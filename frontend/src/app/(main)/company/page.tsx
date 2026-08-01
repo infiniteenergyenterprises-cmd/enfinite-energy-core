@@ -112,7 +112,7 @@ export default function CompanyPage() {
   const [cmsFounder, setCmsFounder] = useState<any|null>(null);
 
   useEffect(() => {
-    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content')
+    fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/content?t=' + Date.now(), { cache: 'no-store' })
       .then(r => r.json())
       .then(d => {
         const map = d.map || {};

@@ -88,7 +88,7 @@ function CompanyNewsManager() {
 
   const load = async () => {
     setLoading(true);
-    const res = await fetch(`${API}/api/company-news`);
+    const res = await fetch(`${API}/api/company-news?t=${Date.now()}`, { cache: 'no-store' });
     const json = await res.json();
     setItems(json.status === 'success' ? json.data : []);
     setLoading(false);
@@ -200,7 +200,7 @@ function EventsManager() {
 
   const load = async () => {
     setLoading(true);
-    const res = await fetch(`${API}/api/events`);
+    const res = await fetch(`${API}/api/events?t=${Date.now()}`, { cache: 'no-store' });
     const json = await res.json();
     setItems(json.status === 'success' ? json.data : []);
     setLoading(false);
@@ -382,7 +382,7 @@ export default function NewsAdminPage() {
   const [mapLoading, setMapLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API}/api/content`).then(r=>r.json()).then(d=>{ setMap(d.map||{}); setMapLoading(false); }).catch(()=>setMapLoading(false));
+    fetch(`${API}/api/content?t=${Date.now()}`, { cache: 'no-store' }).then(r=>r.json()).then(d=>{ setMap(d.map||{}); setMapLoading(false); }).catch(()=>setMapLoading(false));
   }, []);
 
   const TABS = [

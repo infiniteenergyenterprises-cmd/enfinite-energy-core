@@ -20,7 +20,7 @@ async function uploadImg(file: File): Promise<string> {
 }
 
 async function getContent(): Promise<Record<string,any>> {
-  const res = await fetch(`${API}/api/content`);
+  const res = await fetch(`${API}/api/content?t=${Date.now()}`, { cache: 'no-store' });
   if (!res.ok) return {};
   const { map } = await res.json();
   return map || {};

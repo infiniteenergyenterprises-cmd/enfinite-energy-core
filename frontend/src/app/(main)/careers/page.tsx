@@ -75,13 +75,13 @@ export default function CareersPage() {
 
   useEffect(() => {
     const API = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') : 'http://localhost:5000';
-    fetch(`${API}/api/careers`)
+    fetch(`${API}/api/careers?t=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(d => { if (d.success && d.careers?.length > 0) setJobs(d.careers); })
       .catch(() => {})
       .finally(() => setLoading(false));
     // Fetch hero content from CMS
-    fetch(`${API}/api/content`)
+    fetch(`${API}/api/content?t=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(d => {
         const map = d.map || {};
