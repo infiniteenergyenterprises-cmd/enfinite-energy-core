@@ -176,7 +176,7 @@ export default function OurWorkPage() {
   };
 
   const heroContent = usePageContent('WORK_HERO', {
-    title: 'Our Work\nReal Projects.\nReal Impact.',
+    title: 'Real Projects.\nReal Impact.',
     description: 'Every project we deliver reflects our commitment to quality, performance and a sustainable future.',
     imageUrl: '/17.png'
   });
@@ -191,7 +191,11 @@ export default function OurWorkPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 via-transparent to-transparent"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-center h-full pt-8 md:pt-12">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2 leading-tight tracking-tight drop-shadow-lg whitespace-pre-line">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-bold text-amber-400 uppercase tracking-widest mb-4 shadow-[0_0_15px_rgba(245,158,11,0.1)] self-start">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            Our Work
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.15] tracking-tight drop-shadow-xl whitespace-pre-line">
             {heroContent.title}
           </h1>
           <p className="text-base text-gray-300 max-w-xl mb-6 mt-4 font-medium whitespace-pre-line">
