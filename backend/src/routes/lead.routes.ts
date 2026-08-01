@@ -64,30 +64,19 @@ router.post('/', async (req: Request, res: Response) => {
       }).catch(err => console.error('🔥 Firebase error:', err));
     }
 
-    // Fire email asynchronously — don't block the API response
-    console.log('📨 Sending admin notification...');
-    sendAdminNotification(lead).then(res => console.log('Admin notification result:', res)).catch(err =>
-      console.error('📧 Email notification failed:', err)
-    );
+    // Fire email asynchronously via Vercel — don't block the API response
+    const origin = req.headers.origin || 'https://enfinite-energy.vercel.app';
+    console.log(`📨 Delegating email notifications to Vercel at ${origin}/api/send-lead-notifications`);
     
-    // Also send an automated email to the user if it's an event registration
-    if (type === 'EVENT_REGISTRATION') {
-      sendUserEventConfirmation(lead).catch(err =>
-        console.error('📧 User email notification failed:', err)
-      );
-    }
-    // Also send an automated email to the user if it's a survey request
-    else if (type === 'SURVEY') {
-      sendUserSurveyConfirmation(lead).catch(err =>
-        console.error('📧 User survey email notification failed:', err)
-      );
-    } 
-    // Fallback general confirmation for all other forms
-    else {
-      sendUserGeneralConfirmation(lead).catch(err =>
-        console.error('📧 User general email notification failed:', err)
-      );
-    }
+    fetch(`${origin}/api/send-lead-notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lead })
+    }).then(r => r.json()).then(data => {
+      console.log('Vercel email response:', data);
+    }).catch(err => {
+      console.error('🔥 Failed to call Vercel email route:', err);
+    });
 
     return res.status(201).json({ success: true, lead });
   } catch (error) {
