@@ -229,9 +229,9 @@ export function Chatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="w-14 h-14 bg-[#0B1E3D] hover:bg-[#1B2F4C] rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group relative border border-[#0B1E3D] p-1"
+          className="w-14 h-14 bg-[#FCA311] hover:bg-[#e5940f] rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group relative border border-white p-1"
         >
-          <div className="w-full h-full rounded-full overflow-hidden">
+          <div className="w-full h-full rounded-full overflow-hidden bg-white">
             <Image src="/chatbot.png" alt="Chatbot" width={56} height={56} className="object-cover w-full h-full" />
           </div>
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
