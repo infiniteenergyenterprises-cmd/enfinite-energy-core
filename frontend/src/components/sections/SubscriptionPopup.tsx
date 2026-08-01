@@ -51,11 +51,32 @@ export function SubscriptionPopup({ show, onClose }: SubscriptionPopupProps) {
     setTimeout(onClose, 300);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !mobile) return;
-    setSubmitted(true);
-    setTimeout(() => handleClose(), 2500);
+    
+    try {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api') + '/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          phone: mobile,
+          message: reason ? `Interested in: ${reason}` : 'Subscription Popup Lead',
+          type: 'CONTACT'
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setTimeout(() => handleClose(), 2500);
+      } else {
+        alert(data.message || 'Submission failed');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error, please try again.');
+    }
   };
 
   return (
