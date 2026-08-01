@@ -406,8 +406,21 @@ export function SavingsCalculator() {
                         onClick={() => {
                           if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(
-                              (position) => {
-                                setAddress(prev => `Lat: ${position.coords.latitude.toFixed(4)}, Lng: ${position.coords.longitude.toFixed(4)}\n` + prev);
+                              async (position) => {
+                                const lat = position.coords.latitude;
+                                const lon = position.coords.longitude;
+                                setAddress(`Fetching address...`);
+                                try {
+                                  const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                                  const data = await response.json();
+                                  if (data && data.display_name) {
+                                    setAddress(data.display_name);
+                                  } else {
+                                    setAddress(`Lat: ${lat.toFixed(4)}, Lng: ${lon.toFixed(4)}`);
+                                  }
+                                } catch (error) {
+                                  setAddress(`Lat: ${lat.toFixed(4)}, Lng: ${lon.toFixed(4)}`);
+                                }
                               },
                               (err) => {
                                 alert("Couldn't fetch location. Please ensure location permissions are enabled.");
