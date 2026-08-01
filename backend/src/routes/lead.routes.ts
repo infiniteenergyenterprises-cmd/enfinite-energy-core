@@ -109,14 +109,14 @@ router.post('/:id/confirm-email', protect, authorize('ADMIN'), async (req: Reque
       return res.status(400).json({ success: false, message: 'Lead has no email address.' });
     }
 
-    const emailSent = await sendAdminAIConfirmation(lead);
+    const result = await sendAdminAIConfirmation(lead);
 
-    if (emailSent) {
+    if (result.success) {
       // Update status to Contacted automatically
       await prisma.lead.update({ where: { id }, data: { status: 'CONTACTED' } });
       return res.json({ success: true, message: 'Confirmation email sent successfully.' });
     } else {
-      return res.status(500).json({ success: false, message: 'Failed to send confirmation email.' });
+      return res.status(500).json({ success: false, message: result.error || 'Failed to send confirmation email.' });
     }
   } catch (error) {
     console.error('❌ Error sending confirmation email:', error);

@@ -329,10 +329,10 @@ export const sendUserGeneralConfirmation = async (lead: LeadData): Promise<boole
   }
 };
 
-export const sendAdminAIConfirmation = async (lead: LeadData): Promise<boolean> => {
-  if (!lead.email || !process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
-    return false;
-  }
+export const sendAdminAIConfirmation = async (lead: LeadData): Promise<{success: boolean, error?: string}> => {
+  if (!lead.email) return { success: false, error: 'Lead has no email address.' };
+  if (!process.env.SMTP_EMAIL) return { success: false, error: 'SMTP_EMAIL environment variable is missing on server.' };
+  if (!process.env.SMTP_PASSWORD) return { success: false, error: 'SMTP_PASSWORD environment variable is missing on server.' };
 
   const subject = `Your Registration is Approved - Welcome to Enfinite Energy`;
   
@@ -385,10 +385,10 @@ export const sendAdminAIConfirmation = async (lead: LeadData): Promise<boolean> 
       html,
     });
     console.log(`✅ Admin AI Confirmation sent → ${lead.email}`);
-    return true;
-  } catch (err) {
+    return { success: true };
+  } catch (err: any) {
     console.error('❌ Admin AI Email failed:', err);
-    return false;
+    return { success: false, error: err.message || 'Unknown Nodemailer Error' };
   }
 };
 
