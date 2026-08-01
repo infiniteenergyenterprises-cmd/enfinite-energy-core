@@ -38,9 +38,9 @@ export function Footer() {
                     Get Free Quote
                     <ArrowRight className="w-4 h-4" />
                   </Link>
-                  <Link href="tel:+917480018007" className="inline-flex items-center justify-center gap-2 bg-transparent border border-white/30 hover:bg-white/10 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 text-sm">
+                  <a href="tel:+917480018007" className="inline-flex items-center justify-center gap-2 bg-transparent border border-white/30 hover:bg-white/10 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 text-sm">
                     Talk to Expert
-                  </Link>
+                  </a>
                 </div>
               </div>
               
