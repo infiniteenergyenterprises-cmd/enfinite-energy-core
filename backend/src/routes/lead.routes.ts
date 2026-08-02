@@ -61,7 +61,7 @@ router.post('/', async (req: Request, res: Response) => {
         message: lead.message,
         status: 'NEW',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      }).catch(err => console.error('🔥 Firebase error:', err));
+      }).catch((err: any) => console.error('🔥 Firebase error:', err));
     }
 
     // Fire email asynchronously — don't block the API response
@@ -164,7 +164,7 @@ router.delete('/:id', protect, authorize('ADMIN'), async (req: Request, res: Res
     if (lead.type === 'EVENT_REGISTRATION' && admin?.apps?.length > 0) {
       try {
         const snapshot = await admin.firestore().collection('event_registrations').where('id', '==', id).get();
-        snapshot.forEach(doc => {
+        snapshot.forEach((doc: any) => {
           doc.ref.delete();
         });
       } catch (err) {

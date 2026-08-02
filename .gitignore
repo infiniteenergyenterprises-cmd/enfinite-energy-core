@@ -36,3 +36,5 @@ backend/prisma/migrations/
 # Build output
 dist/
 build/
+
+.vercel

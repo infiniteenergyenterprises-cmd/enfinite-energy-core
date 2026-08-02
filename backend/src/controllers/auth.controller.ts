@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       role = await prisma.role.create({
         data: {
           name: 'USER',
-          permissions: ['READ_ONLY'],
+          permissions: 'READ_ONLY',
         },
       });
     }

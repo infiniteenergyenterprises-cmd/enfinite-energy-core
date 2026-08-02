@@ -34,7 +34,7 @@ router.post('/', protect, authorize('ADMIN'), async (req, res) => {
 // DELETE gallery item
 router.delete('/:id', protect, authorize('ADMIN'), async (req, res) => {
   try {
-    await prisma.gallery.delete({ where: { id: req.params.id } });
+    await prisma.gallery.delete({ where: { id: req.params.id as string } });
     res.json({ status: 'success', message: 'Deleted' });
   } catch (e: any) {
     res.status(500).json({ status: 'error', message: e.message });
@@ -46,7 +46,7 @@ router.patch('/:id', protect, authorize('ADMIN'), async (req, res) => {
   try {
     const { title, category } = req.body;
     const item = await prisma.gallery.update({
-      where: { id: req.params.id },
+      where: { id: req.params.id as string },
       data: { title, category }
     });
     res.json({ status: 'success', data: item });

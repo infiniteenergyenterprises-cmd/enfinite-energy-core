@@ -45,7 +45,7 @@ function row(label: string, value: string) {
 }
 
 function buildHtml(lead: LeadData): string {
-  const meta = getMeta(lead.type);
+  const meta = getMeta(lead.type || 'CONTACT');
   const now = new Date().toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
     day: '2-digit', month: 'long', year: 'numeric',
@@ -149,7 +149,7 @@ export const sendAdminNotification = async (lead: LeadData): Promise<boolean> =>
     return false;
   }
 
-  const meta = getMeta(lead.type);
+  const meta = getMeta(lead.type || 'CONTACT');
   const subject = `${meta.emoji} New ${meta.label}: ${lead.name || 'Unknown'} — Enfinite Energy`;
 
   try {
@@ -277,7 +277,7 @@ export const sendUserGeneralConfirmation = async (lead: LeadData): Promise<boole
     return false;
   }
 
-  const meta = getMeta(lead.type);
+  const meta = getMeta(lead.type || 'CONTACT');
   const subject = `Thank you for contacting Enfinite Energy`;
   
   const html = `<!DOCTYPE html>
