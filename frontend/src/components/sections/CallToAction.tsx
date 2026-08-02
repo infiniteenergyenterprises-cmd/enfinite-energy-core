@@ -66,13 +66,15 @@ export function CallToAction() {
                   </div>
                 </a>
                 
-                <a href="mailto:infiniteenergyenterprises@gmail.com" className="flex items-center gap-4 text-white hover:text-orange-400 transition-colors group">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-orange-500/20 group-hover:text-orange-400 transition-all shrink-0">
+                <a href="mailto:infiniteenergyenterprises@gmail.com" className="flex items-start gap-4 text-white hover:text-orange-400 transition-colors group">
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-orange-500/20 group-hover:text-orange-400 transition-all shrink-0 mt-1">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <div>
-                    <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Email Us</div>
-                    <div className="font-bold text-[15px] tracking-wide">infiniteenergyenterprises@gmail.com</div>
+                  <div className="flex-1 w-0 pt-0.5">
+                    <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Email Us</div>
+                    <div className="font-bold text-lg sm:text-xl md:text-2xl tracking-tight leading-snug">
+                      infiniteenergyenterprises<br className="block sm:hidden" />@gmail.com
+                    </div>
                   </div>
                 </a>
                 

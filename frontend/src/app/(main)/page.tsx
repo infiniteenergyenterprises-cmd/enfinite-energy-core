@@ -12,7 +12,6 @@ import { SavingsCalculator } from "@/components/sections/SavingsCalculator";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { NewsAndEvents } from "@/components/sections/NewsAndEvents";
 import { UpcomingEvents } from "@/components/sections/UpcomingEvents";
-import { CallToAction } from "@/components/sections/CallToAction";
 import { ProjectGallery } from "@/components/sections/ProjectGallery";
 import { SuryaGharScheme } from "@/components/sections/SuryaGharScheme";
 import { ActiveLocations } from "@/components/sections/ActiveLocations";
@@ -55,9 +54,7 @@ export default async function Home() {
         </div>
         {/* Latest News & Events */}
         <NewsAndEvents />
-        <CallToAction />
       </div>
     </PageContentProvider>
   );
 }
-

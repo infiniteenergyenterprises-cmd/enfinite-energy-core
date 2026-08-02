@@ -166,12 +166,12 @@ export default function NewsAndEventsPage() {
       {/* 1. Hero Section */}
       <section className="relative bg-[#0B1120] pt-8 pb-8 overflow-visible border-b border-gray-200 min-h-[280px]">
         {/* Hero image on the right */}
-        <div className="absolute top-0 right-0 w-1/2 h-full hidden md:block">
+        <div className="absolute top-0 right-0 w-full md:w-1/2 h-full opacity-60 md:opacity-100">
           <img src={heroImg} alt="Solar News Hero" className="w-full h-full object-cover object-center opacity-90" />
-          {/* Gradient fade from left — lighter so image shows */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/40 to-transparent" />
-          {/* Gradient fade to bottom — lighter */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/60 via-transparent to-transparent" />
+          {/* Gradient fade from left */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/80 md:via-[#0B1120]/40 to-transparent" />
+          {/* Gradient fade to bottom */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] md:from-[#0B1120]/60 via-transparent to-transparent" />
         </div>
         {/* Left dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/80 to-transparent" />
@@ -272,8 +272,8 @@ export default function NewsAndEventsPage() {
                   </div>
                 ))
               ) : liveNews.length > 0 ? (
-                liveNews.map((news, idx) => (
-                  <NewsCard key={idx} {...news} />
+                liveNews.map(({ key, ...rest }, idx) => (
+                  <NewsCard key={key || idx} {...rest} />
                 ))
               ) : (
                 <div className="col-span-2 text-center py-10 text-gray-500">
@@ -291,8 +291,8 @@ export default function NewsAndEventsPage() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {companyNews.map((news, idx) => (
-              <NewsCard key={idx} {...news} />
+            {companyNews.map(({ key, ...rest }, idx) => (
+              <NewsCard key={key || idx} {...rest} />
             ))}
           </div>
         </div>
@@ -304,8 +304,8 @@ export default function NewsAndEventsPage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event, idx) => (
-              <EventCard key={idx} {...event} />
+            {events.map(({ key, ...rest }, idx) => (
+              <EventCard key={key || idx} {...rest} />
             ))}
           </div>
         </div>

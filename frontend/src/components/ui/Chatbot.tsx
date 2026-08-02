@@ -123,9 +123,9 @@ export function Chatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 flex flex-col items-start">
+    <div className="fixed bottom-4 left-4 md:bottom-6 md:left-6 z-50 flex flex-col items-start">
       {isOpen && (
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-[350px] h-[450px] flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-[300px] sm:w-[350px] h-[400px] sm:h-[450px] flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
           <div className="bg-[#1B2F4C] text-white p-4 flex justify-between items-center">
             <div className="flex items-center gap-2">
@@ -146,7 +146,7 @@ export function Chatbot() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 p-4 overflow-y-auto overscroll-contain bg-gray-50 flex flex-col gap-3">
+          <div className="flex-1 p-3 sm:p-4 overflow-y-auto overscroll-contain bg-gray-50 flex flex-col gap-3">
             {messages.map((msg) => (
               <div 
                 key={msg.id} 
@@ -211,7 +211,7 @@ export function Chatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-[#1B2F4C] focus:ring-1 focus:ring-[#1B2F4C] text-sm text-gray-800"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-[#1B2F4C] focus:ring-1 focus:ring-[#1B2F4C] text-sm text-gray-800"
               />
               <button 
                 type="submit"
@@ -229,14 +229,14 @@ export function Chatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-orange-500 hover:bg-orange-600 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group relative p-1"
+          className="w-12 h-12 md:w-16 md:h-16 bg-orange-500 hover:bg-orange-600 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group relative p-1"
         >
           <div className="w-full h-full rounded-full overflow-hidden bg-[#0B1E3D] flex items-center justify-center">
             <Image src="/chatbot.png" alt="Chatbot" width={64} height={64} className="object-contain w-[85%] h-[85%]" />
           </div>
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+          <span className="absolute -top-1 -right-1 flex h-3 w-3 md:h-4 md:w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-orange-500"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 md:h-4 md:w-4 bg-orange-500"></span>
           </span>
         </button>
       )}

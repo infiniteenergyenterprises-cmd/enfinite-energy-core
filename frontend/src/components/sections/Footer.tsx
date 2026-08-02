@@ -89,10 +89,10 @@ export function Footer() {
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-12 gap-x-4 gap-y-8 lg:gap-12 mb-12">
             
             {/* Company Info */}
-            <div className="col-span-1 sm:col-span-2 lg:col-span-4 pr-0 lg:pr-8">
+            <div className="col-span-2 lg:col-span-4 pr-0 lg:pr-8">
               <div className="flex items-center gap-2 mb-4 group cursor-pointer w-fit">
                 <img src="/LOGO.png" alt="EnfiniteEnergy Logo" className="h-12 w-auto object-contain bg-white rounded-lg p-1" />
                 <span className="text-2xl font-bold tracking-tight text-white">EnfiniteEnergy</span>
@@ -151,7 +151,7 @@ export function Footer() {
             </div>
  
             {/* Contact */}
-            <div className="col-span-1 lg:col-span-2">
+            <div className="col-span-2 sm:col-span-2 lg:col-span-2 mt-4 sm:mt-0">
               <h4 className="font-bold text-base mb-3 sm:mb-6 text-white uppercase tracking-wider text-[11px] sm:text-xs">Contact Us</h4>
               <ul className="space-y-2.5 sm:space-y-4 text-xs sm:text-sm">
                 <li className="flex items-start gap-2.5">

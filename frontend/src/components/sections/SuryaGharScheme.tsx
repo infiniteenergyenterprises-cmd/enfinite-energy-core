@@ -50,57 +50,59 @@ export function SuryaGharScheme() {
               <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">Government Initiative</span>
             </div>
             
-            <h2 className="text-4xl lg:text-5xl font-extrabold leading-tight py-1">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight py-1">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-500">{content.title}</span> 
             </h2>
             
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
               {content.description}
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2">
               {benefits.map((benefit, idx) => (
-                <div key={idx} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 hover:bg-slate-700/50 hover:border-amber-500/30 hover:-translate-y-1 transition-all duration-300 shadow-xl">
-                  <div className="bg-amber-500/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-3 border border-amber-500/20">
+                <div key={idx} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-4 hover:bg-slate-700/50 hover:border-amber-500/30 transition-all duration-300 shadow-xl flex items-start gap-4">
+                  <div className="bg-amber-500/10 w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-amber-500/20">
                     {benefit.icon}
                   </div>
-                  <h3 className="font-bold text-lg mb-2 text-white">{benefit.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{benefit.description}</p>
+                  <div>
+                    <h3 className="font-bold text-base mb-1 text-white">{benefit.title}</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">{benefit.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div className="pt-4 flex flex-wrap gap-4">
-              <button onClick={() => openModal('PM_SURYA_GHAR')} className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-orange-500/25 hover:scale-105 transition-all duration-300">
+            <div className="pt-4 flex flex-col sm:flex-row gap-4">
+              <button onClick={() => openModal('PM_SURYA_GHAR')} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg hover:shadow-orange-500/25 hover:scale-105 transition-all duration-300">
                 Check Your Eligibility <ArrowRight className="w-5 h-5" />
               </button>
-              <a href="tel:+917480018007" className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg transition-all duration-300">
+              <a href="tel:+917480018007" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-xl shadow-lg transition-all duration-300">
                 Get Expert Help
               </a>
             </div>
           </div>
 
           {/* Right Image/Visual */}
-          <div className="lg:w-1/2 w-full mt-8 lg:mt-0 relative pb-10 lg:pb-0">
+          <div className="lg:w-1/2 w-full mt-8 lg:mt-0 relative pb-16 lg:pb-0">
             <div className="relative rounded-3xl shadow-2xl border border-white/10 group">
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent z-10 rounded-3xl pointer-events-none"></div>
               {/* Using a placeholder aesthetic image showing solar panels on an Indian home */}
               <img 
                 src={content.imageUrl} 
                 alt={content.title} 
-                className="w-full h-[350px] object-cover rounded-3xl"
+                className="w-full h-[250px] sm:h-[350px] object-cover rounded-3xl"
               />
               
               {/* Floating Badge */}
-              <div className="absolute -bottom-12 left-6 right-6 z-20 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl py-4 px-6 shadow-2xl">
+              <div className="absolute -bottom-8 left-4 right-4 sm:-bottom-12 sm:left-6 sm:right-6 z-20 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl py-3 px-4 sm:py-4 sm:px-6 shadow-2xl">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-amber-400 font-bold uppercase tracking-wider mb-1">Maximum Subsidy</p>
-                    <p className="text-3xl md:text-4xl font-black text-white">₹78,000</p>
+                    <p className="text-[10px] sm:text-sm text-amber-400 font-bold uppercase tracking-wider mb-1">Maximum Subsidy</p>
+                    <p className="text-xl sm:text-3xl md:text-4xl font-black text-white">₹78,000</p>
                   </div>
-                  <div className="text-right border-l border-white/10 pl-6">
-                    <p className="text-sm text-slate-300 font-medium mb-1">System Size</p>
-                    <p className="text-xl md:text-2xl font-bold text-white">3kW</p>
+                  <div className="text-right border-l border-white/10 pl-4 sm:pl-6">
+                    <p className="text-[10px] sm:text-sm text-slate-300 font-medium mb-1">System Size</p>
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">3kW</p>
                   </div>
                 </div>
               </div>

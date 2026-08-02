@@ -42,10 +42,10 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+    <nav className="fixed top-0 left-0 w-full z-[100] bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
         {/* Logo */}
-          <Link href="/" className="flex flex-shrink-0 items-center gap-2 group">
+          <Link href="/" className="flex flex-shrink-0 items-center gap-2 group relative z-10">
             <img src="/LOGO.png" alt="EnfiniteEnergy Logo" className="h-12 w-auto object-contain" />
             <span className="text-xl font-bold tracking-tight text-brand-blue">EnfiniteEnergy</span>
           </Link>
@@ -73,17 +73,17 @@ export function Navbar() {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <div className="lg:hidden">
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2">
-            {isMobileMenuOpen ? <X className="w-6 h-6 text-brand-blue" /> : <Menu className="w-6 h-6 text-brand-blue" />}
+        <div className="lg:hidden relative z-10">
+          <button type="button" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 -mr-2 cursor-pointer touch-manipulation">
+            {isMobileMenuOpen ? <X className="w-7 h-7 text-brand-blue" /> : <Menu className="w-7 h-7 text-brand-blue" />}
           </button>
         </div>
       </div>
       
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 p-4 shadow-lg absolute w-full">
-           <div className="flex flex-col gap-4 font-semibold text-brand-blue">
+        <div className="lg:hidden bg-white border-t border-gray-100 p-4 shadow-2xl absolute top-[80px] left-0 w-full h-[calc(100vh-80px)] overflow-y-auto">
+           <div className="flex flex-col gap-4 font-semibold text-brand-blue h-full pb-4">
              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
              <Link href="/solutions" onClick={() => setIsMobileMenuOpen(false)}>Solutions</Link>
              <Link href="/our-work" onClick={() => setIsMobileMenuOpen(false)}>Our Work</Link>
@@ -92,7 +92,7 @@ export function Navbar() {
              <Link href="/company" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
              <Link href="/careers" onClick={() => setIsMobileMenuOpen(false)}>Careers</Link>
              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-             <a href="tel:+917480018007" className="w-full flex items-center justify-center gap-2 bg-[#F5A623] text-white py-3 rounded-xl font-black text-xs transition-all uppercase tracking-wider mt-2 shadow-sm">
+             <a href="tel:+917480018007" className="w-full flex items-center justify-center gap-2 bg-[#F5A623] text-white py-3 rounded-xl font-black text-xs transition-all uppercase tracking-wider mt-auto mb-6 shadow-sm">
                <Phone className="w-4 h-4" />
                Call Now
              </a>

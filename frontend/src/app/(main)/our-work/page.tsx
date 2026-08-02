@@ -185,12 +185,12 @@ export default function OurWorkPage() {
     <div className="bg-gray-50 min-h-screen font-sans text-gray-900">
       
       {/* 1. Hero Section */}
-      <section className="relative pt-12 pb-32 px-4 sm:px-4 lg:px-6 bg-[#0B1120] border-b border-gray-200">
+      <section className="relative pt-16 md:pt-12 pb-32 px-4 sm:px-4 lg:px-6 bg-[#0B1120] border-b border-gray-200">
         <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url("${heroContent.imageUrl || '/17.png'}")` }}></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120]/90 via-[#0B1120]/40 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 via-transparent to-transparent"></div>
         
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-center h-full pt-8 md:pt-12">
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col justify-center h-full pt-12 md:pt-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-bold text-amber-400 uppercase tracking-widest mb-4 shadow-[0_0_15px_rgba(245,158,11,0.1)] self-start">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
             Our Work
@@ -360,10 +360,10 @@ export default function OurWorkPage() {
                 {/* Subtle Background Glow */}
                 <div className="absolute inset-0 bg-emerald-500/5 blur-3xl rounded-full transform scale-75 opacity-70"></div>
                 
-                <div className="relative z-10 transform scale-[0.9] sm:scale-100 hover:scale-[1.02] transition-transform duration-500 origin-top drop-shadow-2xl mt-2">
+                <div className="relative z-10 transform hover:scale-[1.02] sm:scale-[1.15] sm:hover:scale-[1.17] transition-transform duration-500 origin-top drop-shadow-2xl mt-2">
                   <India 
                     type="select-single"
-                    size={390}
+                    size={330}
                     mapColor="#0A192F" // Darker base to match screenshot
                     strokeColor="#10B981" // Vibrant Emerald Green strokes
                     strokeWidth={1}

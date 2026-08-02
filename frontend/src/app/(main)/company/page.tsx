@@ -172,7 +172,7 @@ export default function CompanyPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen text-gray-900">
+    <div className="bg-white min-h-screen text-gray-900 pt-20 overflow-x-hidden">
 
       {/* ══ HERO ══ */}
       <section className="relative pt-12 pb-12 bg-[#0B1E3D] overflow-hidden">

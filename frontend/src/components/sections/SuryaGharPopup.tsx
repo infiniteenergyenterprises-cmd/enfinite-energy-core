@@ -38,7 +38,7 @@ export function SuryaGharPopup({ onClose }: SuryaGharPopupProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-all duration-300 ${
+      className={`fixed inset-0 z-[999] flex items-center justify-center p-4 transition-all duration-300 ${
         visible ? 'bg-black/75 backdrop-blur-md' : 'bg-transparent backdrop-blur-none pointer-events-none'
       }`}
       onClick={handleClose}
